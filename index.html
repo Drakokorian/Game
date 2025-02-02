@@ -4,15 +4,13 @@
   <meta charset="UTF-8">
   <title>Ultimate Dark Runner for Kids</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Optional: Google AdSense script is commented out -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
   <style>
     /* Global Dark Theme & Responsive Styles */
     body {
       margin: 0;
       overflow: hidden;
       background-color: #121212;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-family: 'Comic Sans MS', sans-serif;
       color: #e0e0e0;
     }
     canvas {
@@ -22,16 +20,18 @@
     /* Overlay styles */
     .overlay {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0,0,0,0.85);
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 1000;
       text-align: center;
       padding: 20px;
+      z-index: 1000;
     }
     .overlay h1, .overlay h2 {
       margin-bottom: 20px;
@@ -51,12 +51,9 @@
       color: #121212;
       margin: 10px;
     }
-    /* Specific overlays */
+    /* Start overlay is visible by default */
     #startOverlay { display: flex; }
-    #tutorialOverlay { background: rgba(0,0,0,0.7); }
-    #gameOverOverlay { background: rgba(0,0,0,0.9); }
-    #pauseOverlay { background: rgba(0,0,0,0.9); font-size: 2em; }
-    /* Control Buttons */
+    /* Control button styles (smaller for mobile) */
     .controlButton {
       position: absolute;
       top: 10px;
@@ -66,16 +63,10 @@
       border-radius: 5px;
       font-size: 0.9em;
       cursor: pointer;
-      z-index: 1100;
       color: #121212;
+      z-index: 1100;
     }
-    #saveScoreButton { left: 10px; }
-    #settingsButton { right: 10px; }
-    #viewHighScoresButton { left: 10px; top: 60px; }
-    #pauseButton { right: 10px; top: 60px; }
-    #creditsButtonControl { right: 10px; top: 120px; }
-    #questsButton { right: 10px; top: 180px; }
-    /* On-Screen Jump Button (smaller for mobile) */
+    /* On-screen jump button: small and circular */
     #onScreenJumpButton {
       position: absolute;
       bottom: 10px;
@@ -86,10 +77,10 @@
       border-radius: 50%;
       font-size: 0.8em;
       cursor: pointer;
-      z-index: 1100;
       color: #121212;
+      z-index: 1100;
     }
-    /* Active Power-Up Timer Display */
+    /* Active power-up timer display */
     #powerUpDisplay {
       position: absolute;
       top: 80px;
@@ -98,20 +89,29 @@
       background: rgba(0,0,0,0.5);
       padding: 5px 10px;
       border-radius: 5px;
-      z-index: 1050;
       color: #ffeb3b;
+      z-index: 1050;
     }
   </style>
+  <!-- Global functions defined here -->
+  <script>
+    // Global function for character selection, available to inline code.
+    function selectCharacter(character) {
+      window.selectedCharacter = character;
+      console.log("Character selected: " + character);
+    }
+  </script>
 </head>
 <body>
   <!-- Game Canvas -->
   <canvas id="gameCanvas" role="img" aria-label="Game canvas"></canvas>
   
-  <!-- Overlays -->
+  <!-- Start Overlay (Character & Language Selection) -->
   <div id="startOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="startTitle">
     <h1 id="startTitle">Ultimate Dark Runner for Kids</h1>
     <p>Select your character:</p>
     <div id="characterSelection">
+      <!-- No inline onclick; event listeners will be attached -->
       <button class="charButton">Red Runner</button>
       <button class="charButton">Blue Bolt</button>
       <button class="charButton">Green Flash</button>
@@ -120,100 +120,87 @@
     <select id="languageSelect">
       <option value="en">English</option>
       <option value="es">Español</option>
-      <option value="fr">Français</option>
-      <option value="ta">தமிழ்</option>
-      <option value="hi">हिन्दी</option>
-      <option value="te">తెలుగు</option>
     </select>
-    <button id="startGameButton" aria-label="Start game">Start Game</button>
+    <button id="startGameButton">Start Game</button>
   </div>
   
+  <!-- Tutorial Overlay (shown for 3 seconds) -->
   <div id="tutorialOverlay" class="overlay" role="alertdialog" aria-live="polite">
     <p>How to Play: Tap the screen or press Spacebar to jump. Avoid obstacles and collect power-ups!</p>
   </div>
   
+  <!-- Game Over Overlay -->
   <div id="gameOverOverlay" class="overlay" role="alertdialog" aria-live="assertive">
     <h1>Game Over</h1>
-    <button id="restartWithoutSaveButton" aria-label="Restart without saving">Restart</button>
-    <button id="saveAndRestartButton" aria-label="Save score and restart">Save Score & Restart</button>
+    <button id="restartWithoutSaveButton">Restart</button>
+    <button id="saveAndRestartButton">Save Score & Restart</button>
     <p id="statsCard"></p>
   </div>
   
+  <!-- Pause Overlay -->
   <div id="pauseOverlay" class="overlay" role="alertdialog" aria-live="assertive">
     <p>Game Paused</p>
-    <button id="resumeButton" aria-label="Resume game">Resume</button>
+    <button id="resumeButton">Resume</button>
   </div>
   
+  <!-- Settings Overlay -->
   <div id="settingsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
     <h2 id="settingsTitle">Settings</h2>
     <label for="soundToggle">Sound:</label>
-    <select id="soundToggle" aria-label="Toggle sound on or off">
+    <select id="soundToggle">
       <option value="on">On</option>
       <option value="off">Off</option>
     </select>
-    <button id="creditsButton" aria-label="View credits">Credits</button>
-    <button id="closeSettingsButton" aria-label="Close settings">Close</button>
+    <button id="creditsButton">Credits</button>
+    <button id="closeSettingsButton">Close</button>
   </div>
   
+  <!-- High Scores Overlay -->
   <div id="highScoresOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="highScoresTitle">
     <h2 id="highScoresTitle">High Scores</h2>
     <ul id="highScoresList" style="list-style: none; padding: 0;"></ul>
-    <button id="closeHighScoresButton" aria-label="Close high scores">Close</button>
+    <button id="closeHighScoresButton">Close</button>
   </div>
   
+  <!-- Credits Overlay -->
   <div id="creditsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle">
     <h2 id="creditsTitle">Credits</h2>
     <p>Developed by Your Name</p>
     <p>Graphics and sounds from free public sources</p>
-    <button id="closeCreditsButton" aria-label="Close credits">Close</button>
+    <button id="closeCreditsButton">Close</button>
   </div>
   
-  <div id="dailyChallengesOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="dailyChallengesTitle">
-    <h2 id="dailyChallengesTitle">Daily Challenges</h2>
-    <p>Challenge: Jump over 5 obstacles in one run!</p>
-    <button id="closeDailyChallengesButton" aria-label="Close daily challenges">Close</button>
-  </div>
-  
-  <div id="questsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="questsTitle">
-    <h2 id="questsTitle">Tiny Quests</h2>
-    <p>Quest: Collect 3 items without colliding!</p>
-    <button id="closeQuestsButton" aria-label="Close quests">Close</button>
-  </div>
-  
-  <div id="stickerBookOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="stickerBookTitle">
-    <h2 id="stickerBookTitle">Sticker Book</h2>
-    <p>Your stickers will appear here!</p>
-    <button id="closeStickerBookButton" aria-label="Close sticker book">Close</button>
-  </div>
-  
-  <div id="parentalDashboardOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="parentalDashboardTitle">
-    <h2 id="parentalDashboardTitle">Parental Dashboard</h2>
-    <p>Time Played: <span id="timePlayed">0</span> minutes</p>
-    <p>Average Score: <span id="averageScore">0</span></p>
-    <button id="closeParentalDashboardButton" aria-label="Close parental dashboard">Close</button>
-  </div>
-  
-  <!-- On-Screen Jump Button (for touch devices) -->
-  <button id="onScreenJumpButton" class="controlButton" aria-label="Jump">Jump</button>
+  <!-- On-Screen Jump Button -->
+  <button id="onScreenJumpButton" class="controlButton">Jump</button>
   
   <!-- Control Buttons -->
-  <button id="saveScoreButton" class="controlButton" aria-label="Save your score">Save Score</button>
-  <button id="settingsButton" class="controlButton" aria-label="Open settings">Settings</button>
-  <button id="viewHighScoresButton" class="controlButton" aria-label="View high scores" style="top:60px;">View High Scores</button>
-  <button id="pauseButton" class="controlButton" aria-label="Pause game" style="top:60px; right:10px;">Pause</button>
-  <button id="creditsButtonControl" class="controlButton" aria-label="View credits" style="top:120px; right:10px;">Credits</button>
-  <button id="questsButton" class="controlButton" aria-label="View quests" style="top:180px; right:10px;">Quests</button>
-  <button id="stickerBookButton" class="controlButton" aria-label="View sticker book" style="top:240px; right:10px;">Sticker Book</button>
-  <button id="parentalDashboardButton" class="controlButton" aria-label="Parental dashboard" style="top:300px; right:10px;">Parents</button>
+  <button id="saveScoreButton" class="controlButton">Save Score</button>
+  <button id="settingsButton" class="controlButton">Settings</button>
+  <button id="viewHighScoresButton" class="controlButton" style="top:60px;">View High Scores</button>
+  <button id="pauseButton" class="controlButton" style="top:60px; right:10px;">Pause</button>
   
-  <!-- Active Power-Up Timer Display -->
-  <div id="powerUpDisplay" aria-live="polite"></div>
+  <div id="powerUpDisplay"></div>
   
-  <!-- Main Script (all code below will run after the DOM is fully loaded) -->
+  <!-- Main Script (all code is inside DOMContentLoaded event) -->
   <script defer>
     "use strict";
     document.addEventListener("DOMContentLoaded", function() {
-      // --- Global Variables ---
+      // Get canvas and context
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+      
+      // Responsive canvas
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        if (player.y + player.height > canvas.height) {
+          player.y = canvas.height - player.height;
+        }
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+      
+      // Global game variables
       let gameState = "menu"; // "menu", "running", "paused", "gameover"
       let score = 0;
       let level = 1;
@@ -224,15 +211,15 @@
       let obstacleTimer = 0;
       let scoreMultiplier = 1;
       
-      // Power-up Variables
+      // Power-up variables
       let flightEnabled = false, flightTimer = 0;
       let highJumpEnabled = false, highJumpTimer = 0;
       let multiplierActive = false, multiplierTimer = 0;
       
-      // Sound Setup
+      // Sound setup (using minimal sound for now)
       let soundEnabled = true;
       
-      // Player Object
+      // Player object (a simple circle)
       let player = {
         x: 50,
         y: canvas.height - 150,
@@ -244,7 +231,7 @@
         onGround: true
       };
       
-      // Obstacles & Items
+      // Obstacles (for now, we'll spawn a simple ground obstacle)
       let obstacles = [];
       const obstacleColors = {
         ground: "#88d8b0",
@@ -254,7 +241,7 @@
         item: "#55efc4"
       };
       
-      // Animated Background: Clouds
+      // Clouds (animated background)
       let clouds = [];
       function spawnCloud() {
         clouds.push({
@@ -267,7 +254,7 @@
       function updateClouds(deltaTime) {
         clouds.forEach(cloud => { cloud.x -= cloud.speed; });
         clouds = clouds.filter(cloud => cloud.x + cloud.radius > 0);
-        if (clouds.length < 5) spawnCloud();
+        if (clouds.length < 3) spawnCloud();
       }
       function renderClouds() {
         ctx.fillStyle = "rgba(255,255,255,0.5)";
@@ -278,7 +265,7 @@
         });
       }
       
-      // Particle System
+      // Particle system
       let particles = [];
       function spawnParticles(x, y, color) {
         for (let i = 0; i < 10; i++) {
@@ -312,35 +299,33 @@
         });
       }
       
-      // Rotating Obstacle Update
+      // Rotating obstacle update (stub for future obstacles)
       function updateRotatingObstacle(obs, deltaTime) {
         if (!obs.angle) { obs.angle = 0; obs.rotationSpeed = 0.05 + Math.random() * 0.05; }
         obs.angle += obs.rotationSpeed * deltaTime * 0.001;
       }
       
-      // Voice Commands Setup
+      // Voice commands (minimal setup)
       function setupVoiceCommands() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
           const recognition = new SpeechRecognition();
           recognition.continuous = true;
-          recognition.lang = languageSelect.value;
+          recognition.lang = document.getElementById("languageSelect").value;
           recognition.onresult = function(event) {
             const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
             if (transcript.includes("jump") && gameState === "running" && player.onGround) {
               player.vy = player.jumpForce;
               player.onGround = false;
-              if (soundEnabled) jumpSound.play();
+              console.log("Voice command: jump");
             }
             if (transcript.includes("pause") && gameState === "running") {
-              isPaused = true;
               gameState = "paused";
               document.getElementById("pauseOverlay").style.display = "flex";
             }
             if (transcript.includes("resume") && gameState === "paused") {
-              isPaused = false;
-              document.getElementById("pauseOverlay").style.display = "none";
               gameState = "running";
+              document.getElementById("pauseOverlay").style.display = "none";
               lastTimestamp = performance.now();
               requestAnimationFrame(gameLoop);
             }
@@ -377,137 +362,75 @@
         }
       });
       
-      // On-Screen Jump Button
+      // On-screen jump button event
       document.getElementById("onScreenJumpButton").addEventListener("click", function() {
         if (gameState === "running" && player.onGround) {
           player.vy = player.jumpForce;
           player.onGround = false;
-          if (soundEnabled) jumpSound.play();
         }
       });
       
-      // Main Game Loop Functions
+      // Main game update function
       function update(deltaTime) {
         if (gameState === "running") {
           score += deltaTime * 0.01 * scoreMultiplier;
           if (score >= level * levelThreshold) {
             level++;
-            if (soundEnabled) levelUpSound.play();
             console.log("Level " + level);
             obstacleSpeed += 0.5;
             if (obstacleInterval > 500) obstacleInterval -= 100;
           }
-          updatePowerUps(deltaTime);
+          // Update power-ups (not fully implemented here)
+          // Update clouds and particles
           updateClouds(deltaTime);
           updateParticles(deltaTime);
-          // Player physics update
+          // Update player physics
           player.vy += player.gravity;
           player.y += player.vy;
-          if (player.y + player.height >= canvas.height - 50) {
-            player.y = canvas.height - 50 - player.height;
+          if (player.y + player.height > canvas.height) {
+            player.y = canvas.height - player.height;
             player.vy = 0;
             player.onGround = true;
           }
-          // Spawn obstacles
+          // Spawn a simple obstacle (a ground block) every few seconds
           obstacleTimer += deltaTime;
           if (obstacleTimer >= obstacleInterval) {
-            spawnObstacle();
+            obstacles.push({ x: canvas.width, y: canvas.height - 80, width: 40, height: 30, type: "ground", color: obstacleColors.ground });
             obstacleTimer = 0;
           }
           // Update obstacles and collision detection
           for (let i = obstacles.length - 1; i >= 0; i--) {
-            if (obstacles[i].type === "rotating") {
-              updateRotatingObstacle(obstacles[i], deltaTime);
-            }
             obstacles[i].x -= obstacleSpeed;
             if (obstacles[i].x + obstacles[i].width < 0) {
               obstacles.splice(i, 1);
               continue;
             }
-            if (rectIntersect(player, obstacles[i])) {
-              if (obstacles[i].type === "item") {
-                if (obstacles[i].itemType === "flight") {
-                  flightEnabled = true;
-                  flightTimer = 5000;
-                  player.originalGravity = player.gravity;
-                  player.gravity = 0.2;
-                  if (soundEnabled) powerUpSound.play();
-                } else if (obstacles[i].itemType === "highjump") {
-                  highJumpEnabled = true;
-                  highJumpTimer = 5000;
-                  player.originalJumpForce = player.jumpForce;
-                  player.jumpForce *= 1.5;
-                  if (soundEnabled) powerUpSound.play();
-                } else if (obstacles[i].itemType === "multiplier") {
-                  multiplierActive = true;
-                  multiplierTimer = 5000;
-                  scoreMultiplier = 2;
-                  if (soundEnabled) multiplierSound.play();
-                }
-                spawnParticles(player.x + player.width/2, player.y + player.height/2, "#55efc4");
-                obstacles.splice(i, 1);
-              } else if (obstacles[i].type === "platform") {
-                if (player.vy >= 0 && player.y + player.height - 10 < obstacles[i].y) {
-                  player.y = obstacles[i].y - player.height;
-                  player.vy = 0;
-                  player.onGround = true;
-                }
-              } else {
-                gameState = "gameover";
-                showGameOverOverlay();
-                return;
-              }
+            // Simple collision detection
+            if (player.x < obstacles[i].x + obstacles[i].width &&
+                player.x + player.width > obstacles[i].x &&
+                player.y < obstacles[i].y + obstacles[i].height &&
+                player.y + player.height > obstacles[i].y) {
+              gameState = "gameover";
+              showGameOverOverlay();
+              return;
             }
           }
         }
       }
       
-      function updatePowerUps(deltaTime) {
-        if (flightEnabled) {
-          flightTimer -= deltaTime;
-          if (flightTimer <= 0) {
-            flightEnabled = false;
-            player.gravity = player.originalGravity;
-          }
-        }
-        if (highJumpEnabled) {
-          highJumpTimer -= deltaTime;
-          if (highJumpTimer <= 0) {
-            highJumpEnabled = false;
-            player.jumpForce = player.originalJumpForce;
-          }
-        }
-        if (multiplierActive) {
-          multiplierTimer -= deltaTime;
-          if (multiplierTimer <= 0) {
-            multiplierActive = false;
-            scoreMultiplier = 1;
-          }
-        }
-      }
-      
+      // Main render function
       function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Dynamic background gradient based on level
-        let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        if (level < 5) {
-          grad.addColorStop(0, "#2c3e50");
-          grad.addColorStop(1, "#34495e");
-        } else if (level < 10) {
-          grad.addColorStop(0, "#1c1c1c");
-          grad.addColorStop(1, "#2f2f2f");
-        } else {
-          grad.addColorStop(0, "#000000");
-          grad.addColorStop(1, "#121212");
-        }
-        ctx.fillStyle = grad;
+        // Background
+        ctx.fillStyle = "#1a1a1a";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Render clouds and scrolling ground
+        // Render clouds
         renderClouds();
+        // Ground
         ctx.fillStyle = "#1c2833";
-        ctx.fillRect(0, canvas.height - 50, canvas.width, canvas.height);
-        // Draw player (gold if flight active, red otherwise)
-        ctx.fillStyle = flightEnabled ? "#f1c40f" : "#e74c3c";
+        ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+        // Player
+        ctx.fillStyle = "#e74c3c";
         ctx.beginPath();
         ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/2, 0, Math.PI*2);
         ctx.fill();
@@ -516,23 +439,14 @@
         ctx.beginPath();
         ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/3, 0, Math.PI);
         ctx.stroke();
-        // Draw obstacles (rotate if necessary)
+        // Obstacles
         obstacles.forEach(obs => {
-          if (obs.type === "rotating") {
-            ctx.save();
-            ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
-            ctx.rotate(obs.angle || 0);
-            ctx.fillStyle = obs.color;
-            ctx.fillRect(-obs.width/2, -obs.height/2, obs.width, obs.height);
-            ctx.restore();
-          } else {
-            ctx.fillStyle = obs.color;
-            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-          }
+          ctx.fillStyle = obs.color;
+          ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
         });
-        // Render particles
+        // Particles
         renderParticles();
-        // Draw centered score and level
+        // Score and level
         ctx.fillStyle = "#ecf0f1";
         ctx.font = "24px Comic Sans MS";
         let scoreText = "Score: " + Math.floor(score);
@@ -541,17 +455,11 @@
         let levelWidth = ctx.measureText(levelText).width;
         ctx.fillText(scoreText, (canvas.width - scoreWidth) / 2, 30);
         ctx.fillText(levelText, (canvas.width - levelWidth) / 2, 60);
-        // Display active power-up timers
-        let powerUpDisplay = document.getElementById("powerUpDisplay");
-        let displayText = "";
-        if (flightEnabled) displayText += "Flight: " + Math.ceil(flightTimer/1000) + "s ";
-        if (highJumpEnabled) displayText += "High Jump: " + Math.ceil(highJumpTimer/1000) + "s ";
-        if (multiplierActive) displayText += "Multiplier: " + Math.ceil(multiplierTimer/1000) + "s ";
-        powerUpDisplay.textContent = displayText;
       }
       
+      // Main game loop
       function gameLoop(timestamp) {
-        const deltaTime = timestamp - lastTimestamp;
+        let deltaTime = timestamp - lastTimestamp;
         lastTimestamp = timestamp;
         update(deltaTime);
         render();
@@ -560,7 +468,7 @@
         }
       }
       
-      // Restart & Game Over Functions
+      // Restart & Game Over functions
       function resetGame() {
         score = 0;
         level = 1;
@@ -570,7 +478,7 @@
       }
       function showGameOverOverlay() {
         document.getElementById("gameOverOverlay").style.display = "flex";
-        document.getElementById("statsCard").textContent = "You jumped " + Math.floor(score * 0.5) + " times and ran " + Math.floor(score) + " m!";
+        document.getElementById("statsCard").textContent = "You ran " + Math.floor(score) + " points!";
       }
       function restartGame() {
         resetGame();
@@ -592,11 +500,8 @@
       document.getElementById("restartWithoutSaveButton").addEventListener("click", restartGame);
       document.getElementById("saveAndRestartButton").addEventListener("click", saveScoreAndRestart);
       
-      // ===============================
-      // END OF DOMContentLoaded – Start Game Loop When Ready
-      // ===============================
-    }); // End of DOMContentLoaded event listener
-    // Note: The game loop starts only when the Start Game button is pressed.
+      // Start game loop is triggered by the Start Game button click (see above)
+    });
   </script>
 </body>
 </html>

@@ -4,18 +4,17 @@
   <meta charset="UTF-8">
   <title>Dark Runner for Kids</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Optional: Google AdSense script (currently not active because ad unit is commented out) -->
+  <!-- Optional: Google AdSense script (currently commented out) -->
   <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
   <style>
-    /* Dark theme global styles */
+    /* Global Dark Theme & Accessibility Styles */
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(to bottom, #1a1a1a, #121212);
+      background-color: #121212;
       font-family: 'Comic Sans MS', cursive, sans-serif;
       color: #e0e0e0;
     }
-    /* Canvas occupies full window */
     canvas {
       display: block;
       background: #1e1e1e;
@@ -27,7 +26,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0,0,0,0.85);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -48,7 +47,37 @@
       cursor: pointer;
       color: #121212;
     }
-    /* Ad Overlay (shown every 4 levels for 30 seconds) */
+    /* Game Over Overlay */
+    #gameOverOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      text-align: center;
+    }
+    #gameOverOverlay h1 {
+      color: #e74c3c;
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    #gameOverOverlay button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #ffeb3b;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #121212;
+      margin: 10px;
+    }
+    /* Ad Overlay (shown every 4 levels) */
     #adOverlay {
       position: absolute;
       top: 0;
@@ -56,7 +85,6 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.9);
-      color: #ffffff;
       display: none;
       flex-direction: column;
       justify-content: center;
@@ -67,18 +95,8 @@
       margin: 10px;
       font-size: 1.8em;
     }
-    /* The ad unit is currently commented out */
-    <!--
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-1234567890123456"
-         data-ad-slot="1234567890"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    -->
     /* Settings Overlay */
-    #settingsOverlay,
-    #highScoresOverlay {
+    #settingsOverlay, #highScoresOverlay {
       position: absolute;
       top: 0;
       left: 0;
@@ -91,19 +109,16 @@
       align-items: center;
       z-index: 950;
     }
-    #settingsOverlay h2,
-    #highScoresOverlay h2 {
+    #settingsOverlay h2, #highScoresOverlay h2 {
       font-size: 2em;
       margin-bottom: 20px;
       color: #ffeb3b;
     }
-    #settingsOverlay label,
-    #highScoresOverlay li {
+    #settingsOverlay label, #highScoresOverlay li {
       font-size: 1.2em;
       margin: 5px;
     }
-    #settingsOverlay button,
-    #highScoresOverlay button {
+    #settingsOverlay button, #highScoresOverlay button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 1em;
@@ -141,10 +156,17 @@
     <button id="startGameButton" aria-label="Start game">Start Game</button>
   </div>
   
-  <!-- Ad Overlay (active every 4 levels for 30 seconds) -->
+  <!-- Game Over Overlay -->
+  <div id="gameOverOverlay" role="alertdialog" aria-live="assertive">
+    <h1>Game Over</h1>
+    <button id="saveScoreButtonOverlay">Save Score</button>
+    <button id="restartGameButton">Restart Game</button>
+  </div>
+  
+  <!-- Ad Overlay (for every 4 levels; ad unit is commented out for now) -->
   <div id="adOverlay" role="alertdialog" aria-live="assertive">
     <p>Advertisement</p>
-    <!-- The ad unit is commented out for now -->
+    <!-- Google AdSense ad unit (currently commented out) -->
     <!--
     <ins class="adsbygoogle"
          style="display:block"
@@ -174,7 +196,7 @@
     <button id="closeHighScoresButton" aria-label="Close high scores">Close</button>
   </div>
   
-  <!-- Control Buttons -->
+  <!-- Control Buttons (for saving score, settings, and viewing high scores) -->
   <button id="saveScoreButton" class="controlButton" aria-label="Save your score">Save Score</button>
   <button id="settingsButton" class="controlButton" aria-label="Open settings">Settings</button>
   <button id="viewHighScoresButton" class="controlButton" aria-label="View high scores">View High Scores</button>
@@ -182,28 +204,25 @@
   <script>
     "use strict";
     
-    // Note: Google AdSense code is currently commented out.
-    // (adsbygoogle = window.adsbygoogle || []).push({});
-    
-    // Canvas setup
+    // ---------- Canvas and Global Variables ----------
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Game state variables
-    let gameState = "menu"; // "menu", "running", or "ad"
+    let gameState = "menu"; // "menu", "running", "ad", "gameover"
     let score = 0;
     let level = 1;
-    const levelThreshold = 100; // Increase level every 100 points
+    const levelThreshold = 100;
     let lastTimestamp = 0;
     
     // Difficulty parameters
     let obstacleSpeed = 5;
     let obstacleInterval = 2000; // milliseconds between obstacles
     
-    // Overlay elements
+    // Overlays
     const startOverlay = document.getElementById("startOverlay");
+    const gameOverOverlay = document.getElementById("gameOverOverlay");
     const adOverlay = document.getElementById("adOverlay");
     const adCountdownElem = document.getElementById("adCountdown");
     const settingsOverlay = document.getElementById("settingsOverlay");
@@ -211,14 +230,18 @@
     
     // Settings
     let soundEnabled = true;
+    let flightEnabled = false;
+    let flightTimer = 0; // in milliseconds
     
-    // Sounds (using free sounds from Google Actions)
+    // Sounds (from free sources)
     const jumpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg");
     jumpSound.preload = "auto";
     const levelUpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
     levelUpSound.preload = "auto";
+    const powerUpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
+    powerUpSound.preload = "auto";
     
-    // Player object (friendly smiling circle)
+    // ---------- Player Object ----------
     const player = {
       x: 50,
       y: canvas.height - 150,
@@ -230,12 +253,19 @@
       onGround: true
     };
     
-    // Obstacles array (multiple obstacles)
+    // ---------- Obstacles and Platforms ----------
+    // Obstacle types: "ground", "flying", "platform", "item"
     let obstacles = [];
     let obstacleTimer = 0;
-    const obstacleColors = ["#88d8b0", "#ffab91", "#ce93d8"];
+    const obstacleColors = {
+      ground: "#88d8b0",
+      flying: "#ffab91",
+      platform: "#a29bfe",
+      item: "#55efc4"
+    };
     
-    // Touch event for jump (for touch devices)
+    // ---------- Event Listeners for Jumping ----------
+    // Touch event for mobile devices
     canvas.addEventListener("touchstart", function(e) {
       e.preventDefault();
       if (gameState === "running" && player.onGround) {
@@ -244,8 +274,7 @@
         if (soundEnabled) jumpSound.play();
       }
     });
-    
-    // Keyboard event: Spacebar jump
+    // Keyboard event for Spacebar jump
     document.addEventListener("keydown", function(e) {
       if (e.code === "Space" && gameState === "running" && player.onGround) {
         player.vy = player.jumpForce;
@@ -254,7 +283,7 @@
       }
     });
     
-    // Start Game button event: hide start overlay and begin game loop
+    // ---------- Start Overlay ----------
     document.getElementById("startGameButton").addEventListener("click", function() {
       startOverlay.style.display = "none";
       gameState = "running";
@@ -262,21 +291,45 @@
       requestAnimationFrame(gameLoop);
     });
     
-    // Save Score functionality
-    function saveHighScore() {
-      const name = prompt("Enter your name to save your score:");
-      if (name) {
-        let highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
-        highScores.push({ name: name.trim(), score: Math.floor(score), level: level, date: new Date().toLocaleDateString() });
-        highScores.sort((a, b) => b.score - a.score);
-        if (highScores.length > 3) highScores = highScores.slice(0, 3);
-        localStorage.setItem("highScores", JSON.stringify(highScores));
-        alert("High score saved!");
-      }
+    // ---------- Game Over Overlay ----------
+    document.getElementById("restartGameButton")?.addEventListener("click", function() {
+      gameOverOverlay.style.display = "none";
+      resetGame();
+      gameState = "running";
+      lastTimestamp = performance.now();
+      requestAnimationFrame(gameLoop);
+    });
+    // If "Restart Game" button is not in the DOM, add it:
+    if (!document.getElementById("restartGameButton")) {
+      let btn = document.createElement("button");
+      btn.id = "restartGameButton";
+      btn.textContent = "Restart Game";
+      btn.setAttribute("aria-label", "Restart Game");
+      btn.addEventListener("click", function() {
+        gameOverOverlay.style.display = "none";
+        resetGame();
+        gameState = "running";
+        lastTimestamp = performance.now();
+        requestAnimationFrame(gameLoop);
+      });
+      gameOverOverlay.appendChild(btn);
     }
-    document.getElementById("saveScoreButton").addEventListener("click", saveHighScore);
+    // Save Score from Game Over overlay
+    document.getElementById("saveScoreButton")?.addEventListener("click", saveHighScore);
     
-    // High Scores overlay: display high scores
+    // ---------- Settings Overlay ----------
+    document.getElementById("settingsButton").addEventListener("click", function() {
+      settingsOverlay.style.display = "flex";
+    });
+    document.getElementById("closeSettingsButton").addEventListener("click", function() {
+      settingsOverlay.style.display = "none";
+    });
+    document.getElementById("soundToggle").addEventListener("change", function() {
+      soundEnabled = (this.value === "on");
+      console.log("Sound enabled:", soundEnabled);
+    });
+    
+    // ---------- High Scores Overlay ----------
     function displayHighScores() {
       const list = document.getElementById("highScoresList");
       list.innerHTML = "";
@@ -290,23 +343,11 @@
       highScoresOverlay.style.display = "flex";
     }
     document.getElementById("viewHighScoresButton").addEventListener("click", displayHighScores);
-    document.getElementById("closeHighScoresButton").addEventListener("click", () => {
+    document.getElementById("closeHighScoresButton").addEventListener("click", function() {
       highScoresOverlay.style.display = "none";
     });
     
-    // Settings overlay: toggle sound on/off
-    document.getElementById("settingsButton").addEventListener("click", () => {
-      settingsOverlay.style.display = "flex";
-    });
-    document.getElementById("closeSettingsButton").addEventListener("click", () => {
-      settingsOverlay.style.display = "none";
-    });
-    document.getElementById("soundToggle").addEventListener("change", function() {
-      soundEnabled = (this.value === "on");
-      console.log("Sound enabled:", soundEnabled);
-    });
-    
-    // Collision detection helper
+    // ---------- Collision Detection Helper ----------
     function rectIntersect(r1, r2) {
       return !(r2.x > r1.x + r1.width ||
                r2.x + r2.width < r1.x ||
@@ -314,62 +355,115 @@
                r2.y + r2.height < r1.y);
     }
     
-    // Spawn obstacle with random attributes
+    // ---------- Spawn Obstacles ----------
+    // Randomly choose an obstacle type with probabilities.
     function spawnObstacle() {
-      const obsHeight = 50 + Math.random() * 50;
-      const obsWidth = 30 + Math.random() * 20;
-      const obstacle = {
-        x: canvas.width,
-        y: canvas.height - 50 - obsHeight,
+      let rnd = Math.random();
+      let type;
+      if (rnd < 0.5) {
+        type = "ground"; // 50%
+      } else if (rnd < 0.75) {
+        type = "flying"; // 25%
+      } else if (rnd < 0.9) {
+        type = "platform"; // 15%
+      } else {
+        type = "item"; // 10%
+      }
+      let obsWidth = 30 + Math.random() * 20;
+      let obsHeight = 30 + Math.random() * 50;
+      let x = canvas.width;
+      let y;
+      switch (type) {
+        case "ground":
+          y = canvas.height - 50 - obsHeight;
+          break;
+        case "flying":
+          y = 50 + Math.random() * (canvas.height / 2 - obsHeight);
+          break;
+        case "platform":
+          y = canvas.height - 200 - Math.random() * 100;
+          break;
+        case "item":
+          y = 50 + Math.random() * (canvas.height / 2 - obsHeight);
+          break;
+      }
+      let obstacle = {
+        x: x,
+        y: y,
         width: obsWidth,
         height: obsHeight,
-        color: obstacleColors[Math.floor(Math.random() * obstacleColors.length)]
+        type: type,
+        color: obstacleColors[type] || "#ffffff"
       };
       obstacles.push(obstacle);
     }
     
-    // Reset game state on collision
-    function resetGame() {
-      score = 0;
-      level = 1;
-      obstacles = [];
-      player.y = canvas.height - 150;
-      player.vy = 0;
-    }
-    
-    // Start Ad overlay every 4 levels for 30 seconds
-    function startAd() {
-      adCountdown = 30;
-      adOverlay.style.display = "flex";
-      adCountdownElem.textContent = adCountdown;
-      // Commented out: Google AdSense initialization (currently disabled)
-      // try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.error("Error initializing ad unit:", e); }
-      let adTimer = setInterval(() => {
-        adCountdown--;
-        adCountdownElem.textContent = adCountdown;
-        if (adCountdown <= 0) {
-          clearInterval(adTimer);
-          adOverlay.style.display = "none";
-          // Increase difficulty for next round
-          obstacleSpeed += 1;
-          if (obstacleInterval > 500) obstacleInterval -= 200;
-          gameState = "running";
+    // ---------- Handle Collision with Different Obstacle Types ----------
+    function handleCollision(obstacle) {
+      if (obstacle.type === "platform") {
+        // Only allow landing if the player is falling onto the platform.
+        if (player.vy >= 0 && player.y + player.height - 10 < obstacle.y) {
+          player.y = obstacle.y - player.height;
+          player.vy = 0;
+          player.onGround = true;
+          return false; // Collision is "safe" (land on platform)
         }
-      }, 1000);
+      } else if (obstacle.type === "item") {
+        // Collect the power-up and enable flight.
+        obstacles.splice(obstacles.indexOf(obstacle), 1);
+        enableFlight();
+        return false; // Do not kill the player.
+      }
+      // For "ground" and "flying" obstacles, any collision is fatal.
+      return true;
     }
     
-    // Update game state
+    // ---------- Enable Flight Power-Up ----------
+    function enableFlight() {
+      flightEnabled = true;
+      flightTimer = 5000; // Flight lasts 5 seconds.
+      // Change player color to indicate flight (for example, gold)
+      // and reduce gravity.
+      player.originalGravity = player.gravity;
+      player.gravity = 0.2;
+      if (soundEnabled) powerUpSound.play();
+    }
+    
+    // Update flight power-up timer.
+    function updateFlight(deltaTime) {
+      if (flightEnabled) {
+        flightTimer -= deltaTime;
+        if (flightTimer <= 0) {
+          flightEnabled = false;
+          player.gravity = player.originalGravity;
+        }
+      }
+    }
+    
+    // ---------- Reset Game on Fatal Collision ----------
+    function resetGame() {
+      // Stop game and show Game Over overlay.
+      gameState = "gameover";
+      // Show Game Over overlay centered.
+      gameOverOverlay.style.display = "flex";
+      // Hide ad overlay if visible.
+      adOverlay.style.display = "none";
+    }
+    
+    // ---------- Main Game Update Function ----------
     function update(deltaTime) {
       if (gameState === "running") {
         score += deltaTime * 0.01;
         if (score >= level * levelThreshold) {
           level++;
           if (soundEnabled) levelUpSound.play();
+          // Show ad overlay every 4 levels.
           if (level % 4 === 0) {
             gameState = "ad";
             startAd();
           }
         }
+        updateFlight(deltaTime);
         // Update player physics
         player.vy += player.gravity;
         player.y += player.vy;
@@ -378,39 +472,42 @@
           player.vy = 0;
           player.onGround = true;
         }
-        // Spawn obstacles
+        // Obstacle spawning
         obstacleTimer += deltaTime;
         if (obstacleTimer >= obstacleInterval) {
           spawnObstacle();
           obstacleTimer = 0;
         }
-        // Update obstacles and collision check
+        // Update obstacles and check collisions
         for (let i = obstacles.length - 1; i >= 0; i--) {
           obstacles[i].x -= obstacleSpeed;
           if (obstacles[i].x + obstacles[i].width < 0) {
             obstacles.splice(i, 1);
           }
           if (rectIntersect(player, obstacles[i])) {
-            resetGame();
+            if (handleCollision(obstacles[i])) {
+              resetGame();
+              break;
+            }
           }
         }
       }
     }
     
-    // Render game objects
+    // ---------- Main Render Function ----------
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Background gradient
+      // Draw background gradient
       let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
       grad.addColorStop(0, "#2c3e50");
       grad.addColorStop(1, "#34495e");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // Ground
+      // Draw ground
       ctx.fillStyle = "#1c2833";
       ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-      // Draw player (smiling circle)
-      ctx.fillStyle = "#e74c3c";
+      // Draw player (circle with a smile)
+      ctx.fillStyle = flightEnabled ? "#f1c40f" : "#e74c3c"; // Gold if flying, red otherwise
       ctx.beginPath();
       ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/2, 0, Math.PI * 2);
       ctx.fill();
@@ -424,56 +521,108 @@
         ctx.fillStyle = obs.color;
         ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
       });
-      // Draw score and level text
+      // Draw score and level centered at the top
       ctx.fillStyle = "#ecf0f1";
       ctx.font = "24px Comic Sans MS";
-      ctx.fillText("Score: " + Math.floor(score), 20, 30);
-      ctx.fillText("Level: " + level, 20, 60);
+      let scoreText = "Score: " + Math.floor(score);
+      let levelText = "Level: " + level;
+      let textWidth = ctx.measureText(scoreText).width;
+      ctx.fillText(scoreText, (canvas.width - textWidth) / 2, 30);
+      textWidth = ctx.measureText(levelText).width;
+      ctx.fillText(levelText, (canvas.width - textWidth) / 2, 60);
     }
     
-    // Main game loop using requestAnimationFrame
+    // ---------- Main Game Loop ----------
     function gameLoop(timestamp) {
       const deltaTime = timestamp - lastTimestamp;
       lastTimestamp = timestamp;
       update(deltaTime);
       render();
-      if (gameState !== "menu") {
+      if (gameState === "running" || gameState === "ad") {
         requestAnimationFrame(gameLoop);
       }
     }
     
-    // Start game loop after "Start Game" is pressed (handled in start button event)
-    
-    // Accessibility: Ensure ARIA roles are set for overlays
-    document.getElementById("adOverlay").setAttribute("role", "alertdialog");
-    document.getElementById("settingsOverlay").setAttribute("role", "dialog");
-    document.getElementById("highScoresOverlay").setAttribute("role", "dialog");
-    
-    // If highScoresOverlay is not present, create it (fallback)
-    if (!document.getElementById("highScoresOverlay")) {
-      let hsOverlay = document.createElement("div");
-      hsOverlay.id = "highScoresOverlay";
-      hsOverlay.innerHTML = "<h2>High Scores</h2><ul id='highScoresList' style='list-style:none;padding:0;'></ul><button id='closeHighScoresButton'>Close</button>";
-      hsOverlay.style.display = "none";
-      hsOverlay.style.position = "absolute";
-      hsOverlay.style.top = "0";
-      hsOverlay.style.left = "0";
-      hsOverlay.style.width = "100%";
-      hsOverlay.style.height = "100%";
-      hsOverlay.style.background = "rgba(0,0,0,0.8)";
-      hsOverlay.style.color = "#fff";
-      hsOverlay.style.zIndex = "15";
-      hsOverlay.style.display = "flex";
-      hsOverlay.style.flexDirection = "column";
-      hsOverlay.style.justifyContent = "center";
-      hsOverlay.style.alignItems = "center";
-      document.body.appendChild(hsOverlay);
-      document.getElementById("closeHighScoresButton").addEventListener("click", () => {
-        hsOverlay.style.display = "none";
-      });
+    // ---------- Ad Overlay Functionality ----------
+    function startAd() {
+      adCountdown = 30;
+      adOverlay.style.display = "flex";
+      adCountdownElem.textContent = adCountdown;
+      // (Google AdSense code commented out for now)
+      // try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.error("Error initializing ad unit:", e); }
+      let adTimer = setInterval(() => {
+        adCountdown--;
+        adCountdownElem.textContent = adCountdown;
+        if (adCountdown <= 0) {
+          clearInterval(adTimer);
+          adOverlay.style.display = "none";
+          // Increase difficulty
+          obstacleSpeed += 1;
+          if (obstacleInterval > 500) obstacleInterval -= 200;
+          gameState = "running";
+          lastTimestamp = performance.now();
+          requestAnimationFrame(gameLoop);
+        }
+      }, 1000);
     }
     
-    // Start the game loop only when the game is running (after start overlay is dismissed)
+    // ---------- Save High Score Functionality ----------
+    function saveHighScore() {
+      const name = prompt("Enter your name to save your score:");
+      if (name) {
+        let highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
+        highScores.push({ name: name.trim(), score: Math.floor(score), level: level, date: new Date().toLocaleDateString() });
+        highScores.sort((a, b) => b.score - a.score);
+        if (highScores.length > 3) highScores = highScores.slice(0, 3);
+        localStorage.setItem("highScores", JSON.stringify(highScores));
+        alert("High score saved!");
+      }
+    }
+    
+    // ---------- High Scores Overlay Functionality ----------
+    function displayHighScores() {
+      const list = document.getElementById("highScoresList");
+      list.innerHTML = "";
+      let highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
+      highScores.sort((a, b) => b.score - a.score);
+      highScores.forEach(entry => {
+        let li = document.createElement("li");
+        li.textContent = `${entry.name} - ${entry.score} (Level ${entry.level}) on ${entry.date}`;
+        list.appendChild(li);
+      });
+      highScoresOverlay.style.display = "flex";
+    }
+    
+    // ---------- Restart Game Functionality ----------
+    function restartGame() {
+      resetGame();
+      gameState = "running";
+      lastTimestamp = performance.now();
+      requestAnimationFrame(gameLoop);
+      gameOverOverlay.style.display = "none";
+    }
+    
+    // ---------- Control Button Event Listeners ----------
+    document.getElementById("viewHighScoresButton").addEventListener("click", displayHighScores);
+    document.getElementById("closeHighScoresButton").addEventListener("click", function() {
+      highScoresOverlay.style.display = "none";
+    });
+    
+    // For the overlay in Game Over, if the Save Score button in that overlay is clicked:
+    document.getElementById("saveScoreButtonOverlay").addEventListener("click", function() {
+      saveHighScore();
+    });
+    
+    // Add a Restart Game button event listener if not already present
+    document.getElementById("restartGameButton").addEventListener("click", restartGame);
+    
+    // ---------- Global Error Handler ----------
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error("Global error:", message, "at", source + ":" + lineno + ":" + colno);
+      return false;
+    };
+    
+    // The game loop is started from the Start overlay.
   </script>
 </body>
 </html>

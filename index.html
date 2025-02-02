@@ -5,36 +5,38 @@
   <title>Cookie Clicker for Kids – Epic Edition</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Main CSS for a playful, child-friendly design */
+    /* Friendlier pastel colors for a child-friendly UI */
     body {
-      background: #f0f8ff;
+      background: #e3f2fd;
       margin: 0;
       font-family: 'Comic Sans MS', cursive, sans-serif;
       text-align: center;
+      color: #424242;
     }
     header {
-      background: #ffcc00;
+      background: #ffeb3b;
       padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     h1 {
-      font-size: 2.5em;
+      font-size: 2.8em;
       margin: 0;
+      color: #424242;
     }
     #gameContainer {
       margin: 20px auto;
       width: 90%;
       max-width: 600px;
-      background: #fff;
-      border: 3px solid #ffcc00;
+      background: #ffffff;
+      border: 3px solid #ffeb3b;
       border-radius: 15px;
       padding: 20px;
       position: relative;
     }
     #instructions {
-      font-size: 1.5em;
-      color: #333;
-      margin-bottom: 10px;
+      font-size: 1.6em;
+      color: #424242;
+      margin-bottom: 15px;
     }
     #cookie {
       width: 220px;
@@ -46,10 +48,10 @@
     }
     .clicked {
       transform: scale(1.15);
-      border-color: #ff66cc;
+      border-color: #f06292;
     }
     .info {
-      font-size: 1.8em;
+      font-size: 1.7em;
       margin: 10px;
     }
     #levelDisplay {
@@ -57,7 +59,7 @@
     }
     #levelUpMessage {
       font-size: 2em;
-      color: #ff6600;
+      color: #f57c00;
       position: absolute;
       top: 10%;
       width: 100%;
@@ -67,30 +69,31 @@
     #adContainer {
       margin: 20px 0;
       padding: 15px;
-      background: #e0e0e0;
-      border: 2px dashed #999;
+      background: #c5cae9;
+      border: 2px dashed #9e9e9e;
       border-radius: 10px;
     }
     #store, #highScores {
       margin: 20px 0;
       text-align: left;
       padding: 15px;
-      border: 2px solid #ccc;
+      border: 2px solid #e0e0e0;
       border-radius: 10px;
-      background: #fafafa;
+      background: #f5f5f5;
     }
     button {
       font-size: 1em;
-      padding: 10px;
+      padding: 10px 15px;
       margin: 5px;
       cursor: pointer;
       border: none;
       border-radius: 5px;
-      background: #ffcc00;
-      color: #333;
+      background: #ffeb3b;
+      color: #424242;
+      transition: background 0.2s;
     }
     button:hover {
-      background: #ffdb4d;
+      background: #fff176;
     }
     /* Language overlay styling */
     #languageOverlay {
@@ -99,7 +102,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.8);
+      background-color: rgba(66, 165, 245, 0.9);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -107,14 +110,16 @@
       z-index: 1000;
     }
     #languageOverlay h2 {
-      color: #fff;
-      font-size: 1.8em;
+      color: #ffffff;
+      font-size: 2em;
       margin-bottom: 20px;
     }
     #languageSelect {
       font-size: 1.2em;
       padding: 10px;
       margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ffffff;
     }
     /* Settings overlay styling */
     #settingsBtn {
@@ -122,6 +127,7 @@
       top: 10px;
       right: 10px;
       z-index: 1001;
+      background: #ffeb3b;
     }
     #settingsOverlay {
       position: fixed;
@@ -129,7 +135,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.8);
+      background-color: rgba(66, 165, 245, 0.9);
       display: none;
       flex-direction: column;
       justify-content: center;
@@ -137,26 +143,27 @@
       z-index: 1001;
     }
     #settingsOverlay h2 {
-      color: #fff;
-      font-size: 1.8em;
+      color: #ffffff;
+      font-size: 2em;
       margin-bottom: 20px;
     }
     #settingsOverlay label {
-      color: #fff;
+      color: #ffffff;
       font-size: 1.2em;
+      margin-right: 10px;
     }
     #avatarSelection {
       margin-top: 20px;
     }
     #avatarSelection h3 {
-      color: #fff;
-      font-size: 1.4em;
+      color: #ffffff;
+      font-size: 1.5em;
       margin-bottom: 10px;
     }
     #avatarPreview {
       width: 100px;
       height: 100px;
-      border: 2px solid #fff;
+      border: 2px solid #ffffff;
       border-radius: 50%;
       margin-bottom: 10px;
     }
@@ -207,9 +214,9 @@
   </div>
   <audio id="clickSound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
   
-  <!-- Language Selection Overlay -->
+  <!-- Language Selection Overlay (visible on load) -->
   <div id="languageOverlay">
-    <h2>Select Language / भाषा चुनें / மொழியை தேர்வு செய்க / భాషను ఎంచుకోండి / Sélectionnez la langue / Seleccione el idioma</h2>
+    <h2>Select Language</h2>
     <select id="languageSelect">
       <option value="en">English</option>
       <option value="hi">हिन्दी</option>
@@ -224,9 +231,11 @@
   <!-- Settings Overlay -->
   <div id="settingsOverlay">
     <h2>Settings</h2>
-    <label>Volume:</label>
-    <input id="volumeSlider" type="range" min="0" max="1" step="0.1" value="1">
-    <!-- New Avatar Selection Section in Settings -->
+    <div>
+      <label for="volumeSlider">Volume:</label>
+      <input id="volumeSlider" type="range" min="0" max="1" step="0.1" value="1">
+    </div>
+    <!-- New Avatar Selection Section -->
     <div id="avatarSelection">
       <h3 id="avatarSelectionHeading">Avatar Selection (49¢)</h3>
       <img id="avatarPreview" src="https://via.placeholder.com/100.png?text=Default+Avatar" alt="Avatar Preview">
@@ -366,7 +375,7 @@
 
     let currentLanguage = "en";
 
-    // Update all text elements according to the current language.
+    // Function to update all text elements based on the current language.
     function updateLanguageTexts() {
       document.title = translations[currentLanguage]["title"];
       document.querySelector("header h1").textContent = translations[currentLanguage]["title"];
@@ -386,7 +395,7 @@
       document.getElementById("applyAvatarBtn").textContent = translations[currentLanguage]["applyAvatar"];
     }
 
-    // Set the current language and update texts.
+    // Function to set the language.
     function setLanguage(lang) {
       currentLanguage = lang;
       updateLanguageTexts();
@@ -402,7 +411,7 @@
     }
 
     // -----------------------------
-    // SettingsManager: Handles settings menu (volume and avatar selection).
+    // SettingsManager: Handles settings (volume and avatar selection).
     // -----------------------------
     class SettingsManager {
       constructor() {
@@ -443,7 +452,7 @@
     }
 
     // -----------------------------
-    // LevelManager: Determines current level and difficulty.
+    // LevelManager: Determines current level and adjusts difficulty.
     // -----------------------------
     class LevelManager {
       constructor(thresholds) {
@@ -471,7 +480,7 @@
     }
 
     // -----------------------------
-    // ScoreManager: Manages score updates and display.
+    // ScoreManager: Updates and displays the score.
     // -----------------------------
     class ScoreManager {
       constructor(scoreDisplayElem) {
@@ -491,7 +500,7 @@
     }
 
     // -----------------------------
-    // CosmeticManager: Manages cosmetic purchase and application.
+    // CosmeticManager: Manages purchase and application of cosmetics.
     // -----------------------------
     class CosmeticManager {
       constructor() {
@@ -537,7 +546,7 @@
     }
 
     // -----------------------------
-    // HighScoreManager: Handles saving and loading high scores.
+    // HighScoreManager: Saves and loads high scores.
     // -----------------------------
     class HighScoreManager {
       constructor(listElem) {
@@ -578,7 +587,7 @@
     }
 
     // -----------------------------
-    // UIManager: Updates UI elements (e.g., level-up messages).
+    // UIManager: Updates UI elements (level-up messages, etc.).
     // -----------------------------
     class UIManager {
       constructor(levelUpElem, levelDisplayElem) {
@@ -598,7 +607,7 @@
     }
 
     // -----------------------------
-    // GameManager: Orchestrates game flow and user interactions.
+    // GameManager: Orchestrates game flow and interactions.
     // -----------------------------
     class GameManager {
       constructor() {

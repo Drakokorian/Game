@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Super Runner for Kids</title>
+  <title>Dark Runner for Kids</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google AdSense script (replace with your actual IDs when available) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- Optional: Google AdSense script (currently not active because ad unit is commented out) -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
   <style>
-    /* Global Styles */
+    /* Dark theme global styles */
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(to bottom, #ffefba, #ffffff);
+      background: linear-gradient(to bottom, #1a1a1a, #121212);
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      color: #424242;
+      color: #e0e0e0;
     }
+    /* Canvas occupies full window */
     canvas {
       display: block;
-      background: #a0d2eb; /* Friendly light blue */
+      background: #1e1e1e;
     }
     /* Start Overlay */
     #startOverlay {
@@ -26,7 +27,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(66, 165, 245, 0.9);
+      background: rgba(0, 0, 0, 0.85);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -34,7 +35,7 @@
       z-index: 1000;
     }
     #startOverlay h1 {
-      color: #ffffff;
+      color: #ffeb3b;
       font-size: 3em;
       margin-bottom: 20px;
     }
@@ -45,54 +46,72 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      color: #121212;
     }
-    /* Ad Overlay (shows every 4 levels for 30 sec) */
+    /* Ad Overlay (shown every 4 levels for 30 seconds) */
     #adOverlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.9);
       color: #ffffff;
-      font-size: 2em;
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 10;
+      z-index: 900;
     }
     #adOverlay p {
       margin: 10px;
+      font-size: 1.8em;
     }
+    /* The ad unit is currently commented out */
+    <!--
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-1234567890123456"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    -->
     /* Settings Overlay */
-    #settingsOverlay, #highScoresOverlay {
+    #settingsOverlay,
+    #highScoresOverlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background: rgba(50,50,50,0.9);
-      color: #ffffff;
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 20;
+      z-index: 950;
     }
-    #settingsOverlay h2, #highScoresOverlay h2 {
-      margin-bottom: 20px;
+    #settingsOverlay h2,
+    #highScoresOverlay h2 {
       font-size: 2em;
+      margin-bottom: 20px;
+      color: #ffeb3b;
     }
-    #settingsOverlay button, #highScoresOverlay button {
+    #settingsOverlay label,
+    #highScoresOverlay li {
+      font-size: 1.2em;
+      margin: 5px;
+    }
+    #settingsOverlay button,
+    #highScoresOverlay button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 1em;
       background: #ffeb3b;
-      color: #000000;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      color: #121212;
     }
     /* Control Buttons */
     .controlButton {
@@ -104,7 +123,8 @@
       border-radius: 5px;
       font-size: 1em;
       cursor: pointer;
-      z-index: 5;
+      z-index: 800;
+      color: #121212;
     }
     #saveScoreButton { left: 10px; }
     #settingsButton { right: 10px; }
@@ -117,22 +137,24 @@
   
   <!-- Start Overlay -->
   <div id="startOverlay" role="dialog" aria-modal="true" aria-labelledby="startTitle">
-    <h1 id="startTitle">Super Runner for Kids</h1>
+    <h1 id="startTitle">Dark Runner for Kids</h1>
     <button id="startGameButton" aria-label="Start game">Start Game</button>
   </div>
   
-  <!-- Ad Overlay
+  <!-- Ad Overlay (active every 4 levels for 30 seconds) -->
   <div id="adOverlay" role="alertdialog" aria-live="assertive">
     <p>Advertisement</p>
-    <!-- Google AdSense ad unit placeholder (replace with your own values) 
+    <!-- The ad unit is commented out for now -->
+    <!--
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-1234567890123456"
          data-ad-slot="1234567890"
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
+    -->
     <p id="adCountdown">30</p>
-  </div> -->
+  </div>
   
   <!-- Settings Overlay -->
   <div id="settingsOverlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
@@ -160,8 +182,8 @@
   <script>
     "use strict";
     
-    // Initialize Google AdSense ad unit
-    (adsbygoogle = window.adsbygoogle || []).push({});
+    // Note: Google AdSense code is currently commented out.
+    // (adsbygoogle = window.adsbygoogle || []).push({});
     
     // Canvas setup
     const canvas = document.getElementById("gameCanvas");
@@ -173,22 +195,24 @@
     let gameState = "menu"; // "menu", "running", or "ad"
     let score = 0;
     let level = 1;
-    const levelThreshold = 100; // Every 100 points, level increases
+    const levelThreshold = 100; // Increase level every 100 points
     let lastTimestamp = 0;
     
     // Difficulty parameters
     let obstacleSpeed = 5;
-    let obstacleInterval = 2000; // in milliseconds
+    let obstacleInterval = 2000; // milliseconds between obstacles
     
-    // Overlays
+    // Overlay elements
     const startOverlay = document.getElementById("startOverlay");
     const adOverlay = document.getElementById("adOverlay");
     const adCountdownElem = document.getElementById("adCountdown");
+    const settingsOverlay = document.getElementById("settingsOverlay");
+    const highScoresOverlay = document.getElementById("highScoresOverlay");
     
     // Settings
     let soundEnabled = true;
     
-    // Sounds (free from Google Actions)
+    // Sounds (using free sounds from Google Actions)
     const jumpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg");
     jumpSound.preload = "auto";
     const levelUpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
@@ -206,30 +230,31 @@
       onGround: true
     };
     
-    // Obstacles array (multiple types with different colors)
+    // Obstacles array (multiple obstacles)
     let obstacles = [];
     let obstacleTimer = 0;
     const obstacleColors = ["#88d8b0", "#ffab91", "#ce93d8"];
     
-    // Touch and keyboard events for jumping
+    // Touch event for jump (for touch devices)
     canvas.addEventListener("touchstart", function(e) {
       e.preventDefault();
-      if (player.onGround && gameState === "running") {
+      if (gameState === "running" && player.onGround) {
         player.vy = player.jumpForce;
         player.onGround = false;
         if (soundEnabled) jumpSound.play();
       }
     });
     
+    // Keyboard event: Spacebar jump
     document.addEventListener("keydown", function(e) {
-      if (e.code === "Space" && player.onGround && gameState === "running") {
+      if (e.code === "Space" && gameState === "running" && player.onGround) {
         player.vy = player.jumpForce;
         player.onGround = false;
         if (soundEnabled) jumpSound.play();
       }
     });
     
-    // Start Game button event
+    // Start Game button event: hide start overlay and begin game loop
     document.getElementById("startGameButton").addEventListener("click", function() {
       startOverlay.style.display = "none";
       gameState = "running";
@@ -242,17 +267,17 @@
       const name = prompt("Enter your name to save your score:");
       if (name) {
         let highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
-        highScores.push({name: name.trim(), score: Math.floor(score), level: level, date: new Date().toLocaleDateString()});
+        highScores.push({ name: name.trim(), score: Math.floor(score), level: level, date: new Date().toLocaleDateString() });
         highScores.sort((a, b) => b.score - a.score);
         if (highScores.length > 3) highScores = highScores.slice(0, 3);
         localStorage.setItem("highScores", JSON.stringify(highScores));
         alert("High score saved!");
       }
     }
+    document.getElementById("saveScoreButton").addEventListener("click", saveHighScore);
     
-    // Display High Scores overlay
+    // High Scores overlay: display high scores
     function displayHighScores() {
-      const overlay = document.getElementById("highScoresOverlay");
       const list = document.getElementById("highScoresList");
       list.innerHTML = "";
       let highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
@@ -262,19 +287,34 @@
         li.textContent = `${entry.name} - ${entry.score} (Level ${entry.level}) on ${entry.date}`;
         list.appendChild(li);
       });
-      overlay.style.display = "flex";
+      highScoresOverlay.style.display = "flex";
+    }
+    document.getElementById("viewHighScoresButton").addEventListener("click", displayHighScores);
+    document.getElementById("closeHighScoresButton").addEventListener("click", () => {
+      highScoresOverlay.style.display = "none";
+    });
+    
+    // Settings overlay: toggle sound on/off
+    document.getElementById("settingsButton").addEventListener("click", () => {
+      settingsOverlay.style.display = "flex";
+    });
+    document.getElementById("closeSettingsButton").addEventListener("click", () => {
+      settingsOverlay.style.display = "none";
+    });
+    document.getElementById("soundToggle").addEventListener("change", function() {
+      soundEnabled = (this.value === "on");
+      console.log("Sound enabled:", soundEnabled);
+    });
+    
+    // Collision detection helper
+    function rectIntersect(r1, r2) {
+      return !(r2.x > r1.x + r1.width ||
+               r2.x + r2.width < r1.x ||
+               r2.y > r1.y + r1.height ||
+               r2.y + r2.height < r1.y);
     }
     
-    // Reset game on collision
-    function resetGame() {
-      score = 0;
-      level = 1;
-      obstacles = [];
-      player.y = canvas.height - 150;
-      player.vy = 0;
-    }
-    
-    // Spawn obstacle with random color, size, and position
+    // Spawn obstacle with random attributes
     function spawnObstacle() {
       const obsHeight = 50 + Math.random() * 50;
       const obsWidth = 30 + Math.random() * 20;
@@ -288,42 +328,37 @@
       obstacles.push(obstacle);
     }
     
-    // Collision detection
-    function rectIntersect(r1, r2) {
-      return !(r2.x > r1.x + r1.width ||
-               r2.x + r2.width < r1.x ||
-               r2.y > r1.y + r1.height ||
-               r2.y + r2.height < r1.y);
+    // Reset game state on collision
+    function resetGame() {
+      score = 0;
+      level = 1;
+      obstacles = [];
+      player.y = canvas.height - 150;
+      player.vy = 0;
     }
     
-    // Start Ad overlay for 30 seconds when level is a multiple of 4
+    // Start Ad overlay every 4 levels for 30 seconds
     function startAd() {
       adCountdown = 30;
       adOverlay.style.display = "flex";
       adCountdownElem.textContent = adCountdown;
-      // Reinitialize Google AdSense ad unit
-      try {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (e) {
-        console.error("Error initializing ad unit:", e);
-      }
-      let adInterval = setInterval(() => {
+      // Commented out: Google AdSense initialization (currently disabled)
+      // try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) { console.error("Error initializing ad unit:", e); }
+      let adTimer = setInterval(() => {
         adCountdown--;
         adCountdownElem.textContent = adCountdown;
         if (adCountdown <= 0) {
-          clearInterval(adInterval);
+          clearInterval(adTimer);
           adOverlay.style.display = "none";
           // Increase difficulty for next round
           obstacleSpeed += 1;
-          if (obstacleInterval > 500) {
-            obstacleInterval -= 200;
-          }
+          if (obstacleInterval > 500) obstacleInterval -= 200;
           gameState = "running";
         }
       }, 1000);
     }
     
-    // Update and render game state
+    // Update game state
     function update(deltaTime) {
       if (gameState === "running") {
         score += deltaTime * 0.01;
@@ -343,13 +378,13 @@
           player.vy = 0;
           player.onGround = true;
         }
-        // Obstacle spawning
+        // Spawn obstacles
         obstacleTimer += deltaTime;
         if (obstacleTimer >= obstacleInterval) {
           spawnObstacle();
           obstacleTimer = 0;
         }
-        // Update obstacles and check collisions
+        // Update obstacles and collision check
         for (let i = obstacles.length - 1; i >= 0; i--) {
           obstacles[i].x -= obstacleSpeed;
           if (obstacles[i].x + obstacles[i].width < 0) {
@@ -362,21 +397,22 @@
       }
     }
     
+    // Render game objects
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       // Background gradient
-      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      grad.addColorStop(0, "#ffefba");
-      grad.addColorStop(1, "#ffffff");
+      let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, "#2c3e50");
+      grad.addColorStop(1, "#34495e");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       // Ground
-      ctx.fillStyle = "#f7f7f7";
+      ctx.fillStyle = "#1c2833";
       ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-      // Draw player: circle with a smile
-      ctx.fillStyle = "#ff6f69";
+      // Draw player (smiling circle)
+      ctx.fillStyle = "#e74c3c";
       ctx.beginPath();
-      ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/2, 0, Math.PI*2);
+      ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/2, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = "#ffffff";
       ctx.lineWidth = 3;
@@ -389,12 +425,13 @@
         ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
       });
       // Draw score and level text
-      ctx.fillStyle = "#424242";
+      ctx.fillStyle = "#ecf0f1";
       ctx.font = "24px Comic Sans MS";
       ctx.fillText("Score: " + Math.floor(score), 20, 30);
       ctx.fillText("Level: " + level, 20, 60);
     }
     
+    // Main game loop using requestAnimationFrame
     function gameLoop(timestamp) {
       const deltaTime = timestamp - lastTimestamp;
       lastTimestamp = timestamp;
@@ -405,27 +442,14 @@
       }
     }
     
-    // Control button event listeners
-    document.getElementById("saveScoreButton").addEventListener("click", saveHighScore);
-    document.getElementById("viewHighScoresButton").addEventListener("click", displayHighScores);
-    document.getElementById("closeHighScoresButton").addEventListener("click", () => {
-      document.getElementById("highScoresOverlay").style.display = "none";
-    });
-    document.getElementById("settingsButton").addEventListener("click", () => {
-      document.getElementById("settingsOverlay").style.display = "flex";
-    });
-    document.getElementById("closeSettingsButton").addEventListener("click", () => {
-      document.getElementById("settingsOverlay").style.display = "none";
-    });
-    document.getElementById("soundToggle").addEventListener("change", function() {
-      soundEnabled = (this.value === "on");
-      console.log("Sound enabled:", soundEnabled);
-    });
+    // Start game loop after "Start Game" is pressed (handled in start button event)
     
-    // Accessibility: Set ARIA roles for overlays
-    adOverlay.setAttribute("role", "alertdialog");
+    // Accessibility: Ensure ARIA roles are set for overlays
+    document.getElementById("adOverlay").setAttribute("role", "alertdialog");
     document.getElementById("settingsOverlay").setAttribute("role", "dialog");
-    // Ensure highScoresOverlay exists; if not, create it.
+    document.getElementById("highScoresOverlay").setAttribute("role", "dialog");
+    
+    // If highScoresOverlay is not present, create it (fallback)
     if (!document.getElementById("highScoresOverlay")) {
       let hsOverlay = document.createElement("div");
       hsOverlay.id = "highScoresOverlay";
@@ -449,6 +473,7 @@
       });
     }
     
+    // Start the game loop only when the game is running (after start overlay is dismissed)
   </script>
 </body>
 </html>

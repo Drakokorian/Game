@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dark Runner for Kids</title>
+  <title>Ultimate Dark Runner for Kids</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Optional Google AdSense script (currently commented out) -->
+  <!-- Google AdSense script is commented out as per request -->
   <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
   <style>
-    /* ===============================
-       Global Dark Theme & Responsive Styles
-       =============================== */
+    /* Global Dark Theme & Responsive Styles */
     body {
       margin: 0;
       overflow: hidden;
@@ -21,129 +19,44 @@
       display: block;
       background: #1e1e1e;
     }
-    /* ===============================
-       Overlays: Start, Game Over, Pause, Settings, High Scores, Tutorial, Credits
-       =============================== */
-    /* Start Overlay */
-    #startOverlay {
+    /* Overlays */
+    .overlay {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      display: flex;
+      background: rgba(0,0,0,0.85);
+      display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      text-align: center;
+      padding: 20px;
     }
-    #startOverlay h1 {
-      color: #ffeb3b;
-      font-size: 3em;
+    .overlay h1, .overlay h2 {
       margin-bottom: 20px;
+      color: #ffeb3b;
     }
-    #startOverlay button {
+    .overlay p {
+      font-size: 1.8em;
+      margin: 10px;
+    }
+    .overlay button {
       padding: 15px 30px;
-      font-size: 1.5em;
+      font-size: 1.2em;
       background: #ffeb3b;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       color: #121212;
-    }
-    /* Tutorial Overlay (shown for first 3 seconds) */
-    #tutorialOverlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 980;
-      text-align: center;
-    }
-    #tutorialOverlay p {
-      font-size: 1.8em;
-      color: #ffeb3b;
       margin: 10px;
     }
-    /* Game Over Overlay */
-    #gameOverOverlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      text-align: center;
-    }
-    #gameOverOverlay h1 {
-      color: #e74c3c;
-      font-size: 3em;
-      margin-bottom: 20px;
-    }
-    #gameOverOverlay button {
-      padding: 10px 20px;
-      font-size: 1em;
-      background: #ffeb3b;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: #121212;
-      margin: 10px;
-    }
-    /* Pause Overlay */
-    #pauseOverlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      font-size: 2em;
-      color: #ffeb3b;
-    }
-    /* Settings Overlay */
-    #settingsOverlay, #highScoresOverlay, #creditsOverlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(50,50,50,0.9);
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 950;
-    }
-    #settingsOverlay h2, #highScoresOverlay h2, #creditsOverlay h2 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      color: #ffeb3b;
-    }
-    #settingsOverlay label, #highScoresOverlay li, #creditsOverlay p {
-      font-size: 1.2em;
-      margin: 5px;
-    }
-    #settingsOverlay button, #highScoresOverlay button, #creditsOverlay button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1em;
-      background: #ffeb3b;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: #121212;
-    }
-    /* Credits Overlay */
-    #creditsOverlay {
-      text-align: center;
-    }
+    #startOverlay { display: flex; }
+    #tutorialOverlay { background: rgba(0,0,0,0.7); }
+    #gameOverOverlay { background: rgba(0,0,0,0.9); }
+    #pauseOverlay { background: rgba(0,0,0,0.9); font-size: 2em; }
+    /* Settings, High Scores, Credits, Daily Challenges, Quests, Sticker Book, Parental Dashboard */
+    /* All share .overlay class */
     /* Control Buttons */
     .controlButton {
       position: absolute;
@@ -154,7 +67,7 @@
       border-radius: 5px;
       font-size: 1em;
       cursor: pointer;
-      z-index: 800;
+      z-index: 1100;
       color: #121212;
     }
     #saveScoreButton { left: 10px; }
@@ -162,6 +75,21 @@
     #viewHighScoresButton { left: 10px; top: 60px; }
     #pauseButton { right: 10px; top: 60px; }
     #creditsButton { right: 10px; top: 120px; }
+    #questsButton { right: 10px; top: 180px; }
+    /* On-Screen Jump Button for Touch */
+    #onScreenJumpButton {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      padding: 15px;
+      background: #ffeb3b;
+      border: none;
+      border-radius: 50%;
+      font-size: 1em;
+      cursor: pointer;
+      z-index: 1100;
+      color: #121212;
+    }
     /* Active Power-Up Timer Display */
     #powerUpDisplay {
       position: absolute;
@@ -171,42 +99,53 @@
       background: rgba(0,0,0,0.5);
       padding: 5px 10px;
       border-radius: 5px;
-      z-index: 850;
+      z-index: 1050;
       color: #ffeb3b;
     }
   </style>
 </head>
 <body>
-  <!-- Game Canvas -->
+  <!-- Canvas -->
   <canvas id="gameCanvas" role="img" aria-label="Game canvas"></canvas>
   
-  <!-- Start Overlay (with Tutorial) -->
-  <div id="startOverlay" role="dialog" aria-modal="true" aria-labelledby="startTitle">
-    <h1 id="startTitle">Dark Runner for Kids</h1>
-    <p>Tap or press Spacebar to jump</p>
+  <!-- Overlays -->
+  <div id="startOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+    <h1 id="startTitle">Ultimate Dark Runner for Kids</h1>
+    <p>Select your character:</p>
+    <div id="characterSelection">
+      <button onclick="selectCharacter('Red Runner')">Red Runner</button>
+      <button onclick="selectCharacter('Blue Bolt')">Blue Bolt</button>
+      <button onclick="selectCharacter('Green Flash')">Green Flash</button>
+    </div>
+    <p>Select Language:</p>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="ta">தமிழ்</option>
+      <option value="hi">हिन्दी</option>
+      <option value="te">తెలుగు</option>
+    </select>
     <button id="startGameButton" aria-label="Start game">Start Game</button>
   </div>
   
-  <!-- Tutorial Overlay (shown for 3 seconds on first start) -->
-  <div id="tutorialOverlay" role="alertdialog" aria-live="polite">
-    <p>Tip: Tap the screen or press Spacebar to jump.</p>
+  <div id="tutorialOverlay" class="overlay" role="alertdialog" aria-live="polite">
+    <p>How to Play: Tap the screen or press Spacebar to jump. Avoid obstacles and collect items for power-ups!</p>
   </div>
   
-  <!-- Game Over Overlay -->
-  <div id="gameOverOverlay" role="alertdialog" aria-live="assertive">
+  <div id="gameOverOverlay" class="overlay" role="alertdialog" aria-live="assertive">
     <h1>Game Over</h1>
     <button id="restartWithoutSaveButton" aria-label="Restart without saving">Restart</button>
     <button id="saveAndRestartButton" aria-label="Save score and restart">Save Score & Restart</button>
+    <p id="statsCard"></p>
   </div>
   
-  <!-- Pause Overlay -->
-  <div id="pauseOverlay" role="alertdialog" aria-live="assertive">
+  <div id="pauseOverlay" class="overlay" role="alertdialog" aria-live="assertive">
     <p>Game Paused</p>
     <button id="resumeButton" aria-label="Resume game">Resume</button>
   </div>
   
-  <!-- Settings Overlay -->
-  <div id="settingsOverlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div id="settingsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
     <h2 id="settingsTitle">Settings</h2>
     <label for="soundToggle">Sound:</label>
     <select id="soundToggle" aria-label="Toggle sound on or off">
@@ -215,28 +154,59 @@
     </select>
     <button id="creditsButton" aria-label="View credits">Credits</button>
     <button id="closeSettingsButton" aria-label="Close settings">Close</button>
+    <button id="pauseGameButton" aria-label="Pause game">Pause</button>
   </div>
   
-  <!-- High Scores Overlay -->
-  <div id="highScoresOverlay" role="dialog" aria-modal="true" aria-labelledby="highScoresTitle">
+  <div id="highScoresOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="highScoresTitle">
     <h2 id="highScoresTitle">High Scores</h2>
     <ul id="highScoresList" style="list-style: none; padding: 0;"></ul>
     <button id="closeHighScoresButton" aria-label="Close high scores">Close</button>
   </div>
   
-  <!-- Credits Overlay -->
-  <div id="creditsOverlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle">
+  <div id="creditsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle">
     <h2 id="creditsTitle">Credits</h2>
     <p>Developed by Your Name</p>
-    <p>Graphics and sounds courtesy of free public sources</p>
+    <p>Graphics and sounds from free public sources</p>
     <button id="closeCreditsButton" aria-label="Close credits">Close</button>
   </div>
+  
+  <div id="dailyChallengesOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="dailyChallengesTitle">
+    <h2 id="dailyChallengesTitle">Daily Challenges</h2>
+    <p>Challenge: Jump over 5 obstacles in one run!</p>
+    <button id="closeDailyChallengesButton" aria-label="Close daily challenges">Close</button>
+  </div>
+  
+  <div id="questsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="questsTitle">
+    <h2 id="questsTitle">Tiny Quests</h2>
+    <p>Quest: Collect 3 items without colliding!</p>
+    <button id="closeQuestsButton" aria-label="Close quests">Close</button>
+  </div>
+  
+  <div id="stickerBookOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="stickerBookTitle">
+    <h2 id="stickerBookTitle">Sticker Book</h2>
+    <p>Your stickers will appear here.</p>
+    <button id="closeStickerBookButton" aria-label="Close sticker book">Close</button>
+  </div>
+  
+  <div id="parentalDashboardOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="parentalDashboardTitle">
+    <h2 id="parentalDashboardTitle">Parental Dashboard</h2>
+    <p>Time Played: <span id="timePlayed">0</span> minutes</p>
+    <p>Average Score: <span id="averageScore">0</span></p>
+    <button id="closeParentalDashboardButton" aria-label="Close parental dashboard">Close</button>
+  </div>
+  
+  <!-- On-Screen Jump Button for Touch Devices -->
+  <button id="onScreenJumpButton" class="controlButton" style="bottom: 10px; right: 10px;" aria-label="Jump">Jump</button>
   
   <!-- Control Buttons -->
   <button id="saveScoreButton" class="controlButton" aria-label="Save your score">Save Score</button>
   <button id="settingsButton" class="controlButton" aria-label="Open settings">Settings</button>
-  <button id="viewHighScoresButton" class="controlButton" aria-label="View high scores">View High Scores</button>
-  <button id="pauseButton" class="controlButton" aria-label="Pause game">Pause</button>
+  <button id="viewHighScoresButton" class="controlButton" aria-label="View high scores" style="top:60px;">View High Scores</button>
+  <button id="pauseButton" class="controlButton" aria-label="Pause game" style="top:60px; right:10px;">Pause</button>
+  <button id="creditsButtonControl" class="controlButton" aria-label="View credits" style="top:120px; right:10px;">Credits</button>
+  <button id="questsButton" class="controlButton" aria-label="View quests" style="top:180px; right:10px;">Quests</button>
+  <button id="stickerBookButton" class="controlButton" aria-label="View sticker book" style="top:240px; right:10px;">Sticker Book</button>
+  <button id="parentalDashboardButton" class="controlButton" aria-label="Parental dashboard" style="top:300px; right:10px;">Parents</button>
   
   <!-- Active Power-Up Timer Display -->
   <div id="powerUpDisplay" aria-live="polite"></div>
@@ -244,7 +214,32 @@
   <script>
     "use strict";
     // ===============================
-    // Responsive Canvas & Background Music Setup
+    // CHARACTER & LANGUAGE SELECTION
+    // ===============================
+    let selectedCharacter = "Default Runner";
+    function selectCharacter(character) {
+      selectedCharacter = character;
+      console.log("Character selected:", selectedCharacter);
+      // In a full implementation, update player sprite here.
+    }
+    const languageSelect = document.getElementById("languageSelect");
+    languageSelect.addEventListener("change", function() {
+      console.log("Language set to:", this.value);
+      // In a full implementation, update all text strings.
+    });
+    
+    // ===============================
+    // BACKGROUND MUSIC
+    // ===============================
+    const bgMusic = new Audio("https://actions.google.com/sounds/v1/ambiences/ambience_cave.ogg");
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+    bgMusic.preload = "auto";
+    // Auto-play background music if allowed:
+    // bgMusic.play();
+    
+    // ===============================
+    // RESPONSIVE CANVAS
     // ===============================
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
@@ -258,96 +253,30 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
     
-    // Background Music (optional)
-    const bgMusic = new Audio("https://actions.google.com/sounds/v1/ambiences/ambience_cave.ogg");
-    bgMusic.loop = true;
-    bgMusic.volume = 0.3;
-    bgMusic.preload = "auto";
-    // Uncomment the next line to auto-play background music (subject to browser policies)
-    // bgMusic.play();
-    
     // ===============================
-    // Global Game Variables
+    // GLOBAL GAME VARIABLES
     // ===============================
     let gameState = "menu"; // "menu", "running", "paused", "gameover"
     let score = 0;
     let level = 1;
     const levelThreshold = 100;
     let lastTimestamp = 0;
-    
-    // Difficulty parameters
     let obstacleSpeed = 5;
     let obstacleInterval = 2000;
     let obstacleTimer = 0;
-    
-    // ===============================
-    // Overlays
-    // ===============================
-    const startOverlay = document.getElementById("startOverlay");
-    const tutorialOverlay = document.getElementById("tutorialOverlay");
-    const gameOverOverlay = document.getElementById("gameOverOverlay");
-    const pauseOverlay = document.getElementById("pauseOverlay");
-    const settingsOverlay = document.getElementById("settingsOverlay");
-    const highScoresOverlay = document.getElementById("highScoresOverlay");
-    const creditsOverlay = document.getElementById("creditsOverlay");
-    
-    // ===============================
-    // Settings
-    // ===============================
-    let soundEnabled = true;
-    
-    // ===============================
-    // Power-Up Variables
-    // ===============================
-    let flightEnabled = false;
-    let flightTimer = 0;
-    let highJumpEnabled = false;
-    let highJumpTimer = 0;
-    let multiplierActive = false;
-    let multiplierTimer = 0;
     let scoreMultiplier = 1;
     
     // ===============================
-    // Particle System for Item Collection
+    // POWER-UP VARIABLES
     // ===============================
-    const particles = [];
-    function spawnParticles(x, y, color) {
-      for (let i = 0; i < 10; i++) {
-        particles.push({
-          x: x,
-          y: y,
-          vx: (Math.random() - 0.5) * 4,
-          vy: (Math.random() - 0.5) * 4,
-          alpha: 1,
-          color: color
-        });
-      }
-    }
-    function updateParticles(deltaTime) {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        particles[i].x += particles[i].vx;
-        particles[i].y += particles[i].vy;
-        particles[i].alpha -= deltaTime * 0.001;
-        if (particles[i].alpha <= 0) {
-          particles.splice(i, 1);
-        }
-      }
-    }
-    function renderParticles() {
-      particles.forEach(p => {
-        ctx.save();
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      });
-    }
+    let flightEnabled = false, flightTimer = 0;
+    let highJumpEnabled = false, highJumpTimer = 0;
+    let multiplierActive = false, multiplierTimer = 0;
     
     // ===============================
-    // Sounds
+    // SOUND SETUP
     // ===============================
+    let soundEnabled = true;
     const jumpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg");
     jumpSound.preload = "auto";
     const levelUpSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
@@ -358,7 +287,7 @@
     multiplierSound.preload = "auto";
     
     // ===============================
-    // Player Object (Smiling Circle)
+    // PLAYER OBJECT
     // ===============================
     const player = {
       x: 50,
@@ -372,9 +301,9 @@
     };
     
     // ===============================
-    // Obstacles and Platforms
+    // OBSTACLES & ITEMS
     // ===============================
-    // Obstacle types: "ground", "flying", "platform", "rotating", "item"
+    // Types: "ground", "flying", "platform", "rotating", "item"
     let obstacles = [];
     const obstacleColors = {
       ground: "#88d8b0",
@@ -385,7 +314,7 @@
     };
     
     // ===============================
-    // Animated Background Elements (Clouds)
+    // ANIMATED BACKGROUND: CLOUDS
     // ===============================
     let clouds = [];
     function spawnCloud() {
@@ -397,13 +326,9 @@
       });
     }
     function updateClouds(deltaTime) {
-      clouds.forEach(cloud => {
-        cloud.x -= cloud.speed;
-      });
+      clouds.forEach(cloud => { cloud.x -= cloud.speed; });
       clouds = clouds.filter(cloud => cloud.x + cloud.radius > 0);
-      if (clouds.length < 5) {
-        spawnCloud();
-      }
+      if (clouds.length < 5) spawnCloud();
     }
     function renderClouds() {
       ctx.fillStyle = "rgba(255,255,255,0.5)";
@@ -415,142 +340,7 @@
     }
     
     // ===============================
-    // Event Listeners for Jumping (Touch & Keyboard)
-    // ===============================
-    canvas.addEventListener("touchstart", function(e) {
-      e.preventDefault();
-      if (gameState === "running" && player.onGround) {
-        player.vy = player.jumpForce;
-        player.onGround = false;
-        if (soundEnabled) jumpSound.play();
-      }
-    });
-    document.addEventListener("keydown", function(e) {
-      if (e.code === "Space" && gameState === "running" && player.onGround) {
-        player.vy = player.jumpForce;
-        player.onGround = false;
-        if (soundEnabled) jumpSound.play();
-      }
-    });
-    
-    // ===============================
-    // Start Game Button
-    // ===============================
-    document.getElementById("startGameButton").addEventListener("click", function() {
-      startOverlay.style.display = "none";
-      // Show tutorial overlay for 3 seconds on first start.
-      tutorialOverlay.style.display = "flex";
-      setTimeout(() => {
-        tutorialOverlay.style.display = "none";
-      }, 3000);
-      gameState = "running";
-      lastTimestamp = performance.now();
-      requestAnimationFrame(gameLoop);
-    });
-    
-    // ===============================
-    // Pause/Resume Functionality (via Pause Button)
-    // ===============================
-    let isPaused = false;
-    document.getElementById("pauseButton").addEventListener("click", function() {
-      if (!isPaused) {
-        isPaused = true;
-        gameState = "paused";
-        pauseOverlay.style.display = "flex";
-      }
-    });
-    document.getElementById("resumeButton")?.addEventListener("click", function() {
-      if (isPaused) {
-        isPaused = false;
-        pauseOverlay.style.display = "none";
-        gameState = "running";
-        lastTimestamp = performance.now();
-        requestAnimationFrame(gameLoop);
-      }
-    });
-    // If resume button is not in the DOM, create it.
-    if (!document.getElementById("resumeButton")) {
-      let resumeBtn = document.createElement("button");
-      resumeBtn.id = "resumeButton";
-      resumeBtn.textContent = "Resume";
-      resumeBtn.setAttribute("aria-label", "Resume game");
-      resumeBtn.addEventListener("click", function() {
-        isPaused = false;
-        pauseOverlay.style.display = "none";
-        gameState = "running";
-        lastTimestamp = performance.now();
-        requestAnimationFrame(gameLoop);
-      });
-      let pauseOverlay = document.getElementById("pauseOverlay");
-      pauseOverlay.appendChild(resumeBtn);
-    }
-    
-    // ===============================
-    // Settings Overlay (Sound Toggle, Credits Button)
-    // ===============================
-    document.getElementById("settingsButton").addEventListener("click", () => {
-      settingsOverlay.style.display = "flex";
-    });
-    document.getElementById("closeSettingsButton").addEventListener("click", () => {
-      settingsOverlay.style.display = "none";
-    });
-    document.getElementById("soundToggle").addEventListener("change", function() {
-      soundEnabled = (this.value === "on");
-      bgMusic.muted = !soundEnabled;
-      console.log("Sound enabled:", soundEnabled);
-    });
-    document.getElementById("creditsButton").addEventListener("click", function() {
-      creditsOverlay.style.display = "flex";
-    });
-    
-    // ===============================
-    // High Scores Overlay
-    // ===============================
-    function displayHighScores() {
-      const list = document.getElementById("highScoresList");
-      list.innerHTML = "";
-      let bestScore = localStorage.getItem("bestScore") || "0";
-      let li = document.createElement("li");
-      li.textContent = "Best Score: " + bestScore;
-      list.appendChild(li);
-      highScoresOverlay.style.display = "flex";
-    }
-    document.getElementById("viewHighScoresButton").addEventListener("click", displayHighScores);
-    document.getElementById("closeHighScoresButton").addEventListener("click", () => {
-      highScoresOverlay.style.display = "none";
-    });
-    
-    // ===============================
-    // Credits Overlay
-    // ===============================
-    // Create credits overlay if not present
-    const creditsOverlay = document.getElementById("creditsOverlay") || (() => {
-      let co = document.createElement("div");
-      co.id = "creditsOverlay";
-      co.setAttribute("role", "dialog");
-      co.setAttribute("aria-modal", "true");
-      co.setAttribute("aria-labelledby", "creditsTitle");
-      co.style.position = "absolute";
-      co.style.top = "0";
-      co.style.left = "0";
-      co.style.width = "100%";
-      co.style.height = "100%";
-      co.style.background = "rgba(50,50,50,0.9)";
-      co.style.display = "none";
-      co.style.flexDirection = "column";
-      co.style.justifyContent = "center";
-      co.style.alignItems = "center";
-      co.style.zIndex = "950";
-      co.innerHTML = "<h2 id='creditsTitle'>Credits</h2><p>Developed by Your Name</p><p>Graphics and sounds from free public sources</p><button id='closeCreditsButton'>Close</button>";
-      document.body.appendChild(co);
-      document.getElementById("closeCreditsButton").addEventListener("click", () => {
-        co.style.display = "none";
-      });
-      return co;
-    })();
-    
-    // ===============================
-    // Particle System for Item Collection
+    // PARTICLE SYSTEM FOR POWER-UPS
     // ===============================
     const particles = [];
     function spawnParticles(x, y, color) {
@@ -586,46 +376,117 @@
     }
     
     // ===============================
-    // Animated Background Elements (Clouds)
+    // ROTATING OBSTACLE UPDATE
     // ===============================
-    let clouds = [];
-    function spawnCloud() {
-      clouds.push({
-        x: canvas.width,
-        y: Math.random() * canvas.height / 3,
-        radius: 20 + Math.random() * 30,
-        speed: 0.5 + Math.random()
-      });
-    }
-    function updateClouds(deltaTime) {
-      clouds.forEach(cloud => {
-        cloud.x -= cloud.speed;
-      });
-      clouds = clouds.filter(cloud => cloud.x + cloud.radius > 0);
-      if (clouds.length < 5) spawnCloud();
-    }
-    function renderClouds() {
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      clouds.forEach(cloud => {
-        ctx.beginPath();
-        ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-    
-    // ===============================
-    // Player, Obstacles, and Power-Up Rendering
-    // ===============================
-    // For rotating obstacles, add a rotation property.
     function updateRotatingObstacle(obs, deltaTime) {
       if (!obs.angle) { obs.angle = 0; obs.rotationSpeed = 0.05 + Math.random() * 0.05; }
       obs.angle += obs.rotationSpeed * deltaTime * 0.001;
     }
     
     // ===============================
-    // Event Listeners for Game Controls (Pause)
+    // VOICE COMMANDS (Using Web Speech API)
+    // ===============================
+    function setupVoiceCommands() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.lang = languageSelect.value;
+        recognition.onresult = function(event) {
+          const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+          if (transcript.includes("jump") && gameState === "running" && player.onGround) {
+            player.vy = player.jumpForce;
+            player.onGround = false;
+            if (soundEnabled) jumpSound.play();
+          }
+          if (transcript.includes("pause") && gameState === "running") {
+            isPaused = true;
+            gameState = "paused";
+            pauseOverlay.style.display = "flex";
+          }
+          if (transcript.includes("resume") && gameState === "paused") {
+            isPaused = false;
+            pauseOverlay.style.display = "none";
+            gameState = "running";
+            lastTimestamp = performance.now();
+            requestAnimationFrame(gameLoop);
+          }
+        };
+        recognition.start();
+      } else {
+        console.log("Voice commands not supported in this browser.");
+      }
+    }
+    setupVoiceCommands();
+    
+    // ===============================
+    // SECRET RAINBOW MODE (Key Combination: R, A, I, N, B, O, W)
+    // ===============================
+    let rainbowModeActive = false;
+    let rainbowModeKeys = "";
+    document.addEventListener("keydown", function(e) {
+      rainbowModeKeys += e.key.toLowerCase();
+      if (rainbowModeKeys.endsWith("rainbow")) {
+        rainbowModeActive = !rainbowModeActive;
+        console.log("Rainbow Mode:", rainbowModeActive ? "Activated" : "Deactivated");
+        rainbowModeKeys = "";
+      }
+      if (rainbowModeActive) {
+        // Override obstacle and background colors
+        obstacleColors.ground = "#ff0000";
+        obstacleColors.flying = "#00ff00";
+        obstacleColors.platform = "#0000ff";
+        obstacleColors.rotating = "#ffff00";
+        obstacleColors.item = "#ff00ff";
+      } else {
+        // Restore original colors
+        obstacleColors.ground = "#88d8b0";
+        obstacleColors.flying = "#ffab91";
+        obstacleColors.platform = "#a29bfe";
+        obstacleColors.rotating = "#f39c12";
+        obstacleColors.item = "#55efc4";
+      }
+    });
+    
+    // ===============================
+    // ON-SCREEN JUMP BUTTON (for touch devices)
+    // ===============================
+    document.getElementById("onScreenJumpButton").addEventListener("click", function() {
+      if (gameState === "running" && player.onGround) {
+        player.vy = player.jumpForce;
+        player.onGround = false;
+        if (soundEnabled) jumpSound.play();
+      }
+    });
+    
+    // ===============================
+    // START GAME, TUTORIAL, & INITIALIZATION
+    // ===============================
+    document.getElementById("startGameButton").addEventListener("click", function() {
+      startOverlay.style.display = "none";
+      tutorialOverlay.style.display = "flex";
+      setTimeout(() => { tutorialOverlay.style.display = "none"; }, 3000);
+      gameState = "running";
+      lastTimestamp = performance.now();
+      requestAnimationFrame(gameLoop);
+    });
+    
+    // ===============================
+    // PAUSE/RESUME FUNCTIONALITY
     // ===============================
     let isPaused = false;
+    const pauseOverlay = document.createElement("div");
+    pauseOverlay.id = "pauseOverlay";
+    pauseOverlay.className = "overlay";
+    pauseOverlay.innerHTML = "<p>Game Paused</p><button id='resumeButton'>Resume</button>";
+    document.body.appendChild(pauseOverlay);
+    document.getElementById("resumeButton").addEventListener("click", function() {
+      isPaused = false;
+      pauseOverlay.style.display = "none";
+      gameState = "running";
+      lastTimestamp = performance.now();
+      requestAnimationFrame(gameLoop);
+    });
     document.getElementById("pauseButton").addEventListener("click", function() {
       if (!isPaused && gameState === "running") {
         isPaused = true;
@@ -633,74 +494,53 @@
         pauseOverlay.style.display = "flex";
       }
     });
-    // Create Pause Overlay if not exists
-    let pauseOverlay = document.getElementById("pauseOverlay");
-    if (!pauseOverlay) {
-      pauseOverlay = document.createElement("div");
-      pauseOverlay.id = "pauseOverlay";
-      pauseOverlay.innerHTML = "<p>Game Paused</p><button id='resumeButton'>Resume</button>";
-      document.body.appendChild(pauseOverlay);
-      document.getElementById("resumeButton").addEventListener("click", function() {
-        isPaused = false;
-        pauseOverlay.style.display = "none";
-        gameState = "running";
-        lastTimestamp = performance.now();
-        requestAnimationFrame(gameLoop);
-      });
+    
+    // ===============================
+    // SETTINGS, HIGH SCORES, CREDITS, QUESTS, STICKER BOOK, PARENTAL DASHBOARD
+    // ===============================
+    document.getElementById("settingsButton").addEventListener("click", () => {
+      settingsOverlay.style.display = "flex";
+    });
+    document.getElementById("closeSettingsButton").addEventListener("click", () => {
+      settingsOverlay.style.display = "none";
+    });
+    document.getElementById("creditsButton").addEventListener("click", () => {
+      creditsOverlay.style.display = "flex";
+    });
+    document.getElementById("closeCreditsButton").addEventListener("click", () => {
+      creditsOverlay.style.display = "none";
+    });
+    document.getElementById("viewHighScoresButton").addEventListener("click", displayHighScores);
+    document.getElementById("closeHighScoresButton").addEventListener("click", () => {
+      highScoresOverlay.style.display = "none";
+    });
+    // For quests, sticker book, and parental dashboard, simply show alerts (these can be expanded)
+    document.getElementById("questsButton").addEventListener("click", () => { alert("Quest: Collect 3 items without colliding!"); });
+    document.getElementById("stickerBookButton").addEventListener("click", () => { alert("Sticker Book: Your stickers will appear here!"); });
+    document.getElementById("parentalDashboardButton").addEventListener("click", () => { 
+      document.getElementById("timePlayed").textContent = Math.floor(score / 100);
+      document.getElementById("averageScore").textContent = Math.floor(score / level);
+      document.getElementById("parentalDashboardOverlay").style.display = "flex"; 
+    });
+    document.getElementById("closeParentalDashboardButton").addEventListener("click", () => {
+      document.getElementById("parentalDashboardOverlay").style.display = "none";
+    });
+    
+    // ===============================
+    // HIGH SCORES FUNCTIONALITY
+    // ===============================
+    function displayHighScores() {
+      const list = document.getElementById("highScoresList");
+      list.innerHTML = "";
+      let bestScore = localStorage.getItem("bestScore") || "0";
+      let li = document.createElement("li");
+      li.textContent = "Best Score: " + bestScore;
+      list.appendChild(li);
+      highScoresOverlay.style.display = "flex";
     }
     
     // ===============================
-    // Power-Up Functions
-    // ===============================
-    function enableFlight() {
-      flightEnabled = true;
-      flightTimer = 5000;
-      player.originalGravity = player.gravity;
-      player.gravity = 0.2;
-      if (soundEnabled) powerUpSound.play();
-      spawnParticles(player.x + player.width/2, player.y + player.height/2, "#f1c40f");
-    }
-    function enableHighJump() {
-      highJumpEnabled = true;
-      highJumpTimer = 5000;
-      player.originalJumpForce = player.jumpForce;
-      player.jumpForce *= 1.5;
-      if (soundEnabled) powerUpSound.play();
-      spawnParticles(player.x + player.width/2, player.y + player.height/2, "#a29bfe");
-    }
-    function enableMultiplier() {
-      multiplierActive = true;
-      multiplierTimer = 5000;
-      scoreMultiplier = 2;
-      if (soundEnabled) multiplierSound.play();
-      spawnParticles(player.x + player.width/2, player.y + player.height/2, "#55efc4");
-    }
-    function updatePowerUps(deltaTime) {
-      if (flightEnabled) {
-        flightTimer -= deltaTime;
-        if (flightTimer <= 0) {
-          flightEnabled = false;
-          player.gravity = player.originalGravity;
-        }
-      }
-      if (highJumpEnabled) {
-        highJumpTimer -= deltaTime;
-        if (highJumpTimer <= 0) {
-          highJumpEnabled = false;
-          player.jumpForce = player.originalJumpForce;
-        }
-      }
-      if (multiplierActive) {
-        multiplierTimer -= deltaTime;
-        if (multiplierTimer <= 0) {
-          multiplierActive = false;
-          scoreMultiplier = 1;
-        }
-      }
-    }
-    
-    // ===============================
-    // Reset Game Function
+    // GAME OVER & RESTART FUNCTIONALITY
     // ===============================
     function resetGame() {
       score = 0;
@@ -709,9 +549,96 @@
       player.y = canvas.height - 150;
       player.vy = 0;
     }
+    function showGameOverOverlay() {
+      document.getElementById("gameOverOverlay").style.display = "flex";
+      // Optionally, show a stats card:
+      document.getElementById("statsCard").textContent = "You jumped " + Math.floor(score * 0.5) + " times and ran " + Math.floor(score) + " meters!";
+    }
+    function restartGame() {
+      resetGame();
+      document.getElementById("gameOverOverlay").style.display = "none";
+      gameState = "running";
+      lastTimestamp = performance.now();
+      requestAnimationFrame(gameLoop);
+    }
+    function saveScoreAndRestart() {
+      let bestScore = parseInt(localStorage.getItem("bestScore") || "0");
+      if (score > bestScore) {
+        localStorage.setItem("bestScore", Math.floor(score));
+        alert("New high score saved!");
+      } else {
+        alert("Score not high enough. Your best score remains " + bestScore);
+      }
+      restartGame();
+    }
+    document.getElementById("restartWithoutSaveButton").addEventListener("click", restartGame);
+    document.getElementById("saveAndRestartButton").addEventListener("click", saveScoreAndRestart);
     
     // ===============================
-    // Main Update Function
+    // VOICE COMMANDS (Full Implementation using Web Speech API)
+    // ===============================
+    function setupVoiceCommands() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.lang = languageSelect.value;
+        recognition.onresult = function(event) {
+          const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+          if (transcript.includes("jump") && gameState === "running" && player.onGround) {
+            player.vy = player.jumpForce;
+            player.onGround = false;
+            if (soundEnabled) jumpSound.play();
+          }
+          if (transcript.includes("pause") && gameState === "running") {
+            isPaused = true;
+            gameState = "paused";
+            pauseOverlay.style.display = "flex";
+          }
+          if (transcript.includes("resume") && gameState === "paused") {
+            isPaused = false;
+            pauseOverlay.style.display = "none";
+            gameState = "running";
+            lastTimestamp = performance.now();
+            requestAnimationFrame(gameLoop);
+          }
+        };
+        recognition.start();
+      } else {
+        console.log("Voice commands not supported.");
+      }
+    }
+    setupVoiceCommands();
+    
+    // ===============================
+    // SECRET RAINBOW MODE (Activated by typing "rainbow")
+    // ===============================
+    let rainbowModeActive = false;
+    let rainbowModeKeys = "";
+    document.addEventListener("keydown", function(e) {
+      rainbowModeKeys += e.key.toLowerCase();
+      if (rainbowModeKeys.endsWith("rainbow")) {
+        rainbowModeActive = !rainbowModeActive;
+        console.log("Rainbow Mode:", rainbowModeActive ? "Activated" : "Deactivated");
+        if (rainbowModeActive) {
+          obstacleColors.ground = "#ff0000";
+          obstacleColors.flying = "#00ff00";
+          obstacleColors.platform = "#0000ff";
+          obstacleColors.rotating = "#ffff00";
+          obstacleColors.item = "#ff00ff";
+        } else {
+          obstacleColors.ground = "#88d8b0";
+          obstacleColors.flying = "#ffab91";
+          obstacleColors.platform = "#a29bfe";
+          obstacleColors.rotating = "#f39c12";
+          obstacleColors.item = "#55efc4";
+        }
+        rainbowModeKeys = "";
+      }
+    });
+    
+    // ===============================
+    // MAIN GAME LOOP
     // ===============================
     function update(deltaTime) {
       if (gameState === "running") {
@@ -719,12 +646,15 @@
         if (score >= level * levelThreshold) {
           level++;
           if (soundEnabled) levelUpSound.play();
-          // Optionally, show a level transition message (not implemented here for brevity)
-          // Increase difficulty gradually
+          // Display a level transition message (flash on screen)
+          flashLevelMessage("Level " + level);
+          // Increase difficulty dynamically
           obstacleSpeed += 0.5;
           if (obstacleInterval > 500) obstacleInterval -= 100;
         }
         updatePowerUps(deltaTime);
+        updateClouds(deltaTime);
+        updateParticles(deltaTime);
         // Update player physics
         player.vy += player.gravity;
         player.y += player.vy;
@@ -739,9 +669,8 @@
           spawnObstacle();
           obstacleTimer = 0;
         }
-        // Update obstacles and check for collisions
+        // Update obstacles and collision detection
         for (let i = obstacles.length - 1; i >= 0; i--) {
-          // If the obstacle is of type "rotating", update its rotation.
           if (obstacles[i].type === "rotating") {
             updateRotatingObstacle(obstacles[i], deltaTime);
           }
@@ -752,65 +681,55 @@
           }
           if (rectIntersect(player, obstacles[i])) {
             if (obstacles[i].type === "item") {
-              // Collect power-up based on itemType: "flight", "highjump", "multiplier"
               if (obstacles[i].itemType === "flight") {
                 enableFlight();
               } else if (obstacles[i].itemType === "highjump") {
                 enableHighJump();
               } else if (obstacles[i].itemType === "multiplier") {
-                enableMultiplier();
+                multiplierActive = true;
+                multiplierTimer = 5000;
+                scoreMultiplier = 2;
+                if (soundEnabled) multiplierSound.play();
               }
+              spawnParticles(player.x + player.width / 2, player.y + player.height / 2, "#55efc4");
               obstacles.splice(i, 1);
             } else if (obstacles[i].type === "platform") {
-              // Allow safe landing if falling onto the platform
               if (player.vy >= 0 && player.y + player.height - 10 < obstacles[i].y) {
                 player.y = obstacles[i].y - player.height;
                 player.vy = 0;
                 player.onGround = true;
               }
             } else {
-              // Fatal collision for other obstacle types
               gameState = "gameover";
               showGameOverOverlay();
               return;
             }
           }
         }
-        // Update background elements (clouds)
-        updateClouds(deltaTime);
-        // Update particle effects
-        updateParticles(deltaTime);
       }
     }
     
-    // ===============================
-    // Main Render Function
-    // ===============================
     function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Background gradient changes with level
-      let grad;
+      // Background gradient changes based on level
+      let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
       if (level < 5) {
-        grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
         grad.addColorStop(0, "#2c3e50");
         grad.addColorStop(1, "#34495e");
       } else if (level < 10) {
-        grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
         grad.addColorStop(0, "#1c1c1c");
         grad.addColorStop(1, "#2f2f2f");
       } else {
-        grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
         grad.addColorStop(0, "#000000");
         grad.addColorStop(1, "#121212");
       }
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // Draw animated clouds
+      // Render clouds and scrolling ground
       renderClouds();
-      // Draw scrolling ground pattern
       ctx.fillStyle = "#1c2833";
       ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-      // Draw player (circle with a smile; gold if flying)
+      // Draw player (if flight active, draw in gold)
       ctx.fillStyle = flightEnabled ? "#f1c40f" : "#e74c3c";
       ctx.beginPath();
       ctx.arc(player.x + player.width / 2, player.y + player.height / 2, player.width / 2, 0, Math.PI * 2);
@@ -820,7 +739,7 @@
       ctx.beginPath();
       ctx.arc(player.x + player.width / 2, player.y + player.height / 2, player.width / 3, 0, Math.PI);
       ctx.stroke();
-      // Draw obstacles; if rotating, rotate them
+      // Draw obstacles (rotate if necessary)
       obstacles.forEach(obs => {
         if (obs.type === "rotating") {
           ctx.save();
@@ -834,9 +753,9 @@
           ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
         }
       });
-      // Render particles (for power-up effects)
+      // Render particles
       renderParticles();
-      // Draw score and level (centered at the top)
+      // Draw score and level centered at the top
       ctx.fillStyle = "#ecf0f1";
       ctx.font = "24px Comic Sans MS";
       let scoreText = "Score: " + Math.floor(score);
@@ -845,66 +764,25 @@
       let levelWidth = ctx.measureText(levelText).width;
       ctx.fillText(scoreText, (canvas.width - scoreWidth) / 2, 30);
       ctx.fillText(levelText, (canvas.width - levelWidth) / 2, 60);
-      // Display active power-up timers if any
+      // Display active power-up timers
       let powerUpDisplay = document.getElementById("powerUpDisplay");
       let displayText = "";
-      if (flightEnabled) {
-        displayText += "Flight: " + Math.ceil(flightTimer / 1000) + "s ";
-      }
-      if (highJumpEnabled) {
-        displayText += "High Jump: " + Math.ceil(highJumpTimer / 1000) + "s ";
-      }
-      if (multiplierActive) {
-        displayText += "Multiplier: " + Math.ceil(multiplierTimer / 1000) + "s ";
-      }
+      if (flightEnabled) displayText += "Flight: " + Math.ceil(flightTimer / 1000) + "s ";
+      if (highJumpEnabled) displayText += "High Jump: " + Math.ceil(highJumpTimer / 1000) + "s ";
+      if (multiplierActive) displayText += "Multiplier: " + Math.ceil(multiplierTimer / 1000) + "s ";
       powerUpDisplay.textContent = displayText;
     }
     
-    // ===============================
-    // Main Game Loop
-    // ===============================
     function gameLoop(timestamp) {
       const deltaTime = timestamp - lastTimestamp;
       lastTimestamp = timestamp;
       update(deltaTime);
       render();
-      if (gameState === "running") {
-        requestAnimationFrame(gameLoop);
-      }
+      if (gameState === "running") requestAnimationFrame(gameLoop);
     }
     
     // ===============================
-    // Cloud Rendering Functions (Animated Background)
-    // ===============================
-    function updateClouds(deltaTime) {
-      clouds.forEach(cloud => {
-        cloud.x -= cloud.speed;
-      });
-      clouds = clouds.filter(cloud => cloud.x + cloud.radius > 0);
-      if (clouds.length < 5) {
-        spawnCloud();
-      }
-    }
-    function renderClouds() {
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      clouds.forEach(cloud => {
-        ctx.beginPath();
-        ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-    let clouds = [];
-    function spawnCloud() {
-      clouds.push({
-        x: canvas.width,
-        y: Math.random() * canvas.height / 3,
-        radius: 20 + Math.random() * 30,
-        speed: 0.5 + Math.random()
-      });
-    }
-    
-    // ===============================
-    // Restart and Reset Functions
+    // RESTART & GAME OVER FUNCTIONS
     // ===============================
     function resetGame() {
       score = 0;
@@ -914,17 +792,16 @@
       player.vy = 0;
     }
     function showGameOverOverlay() {
-      gameOverOverlay.style.display = "flex";
+      document.getElementById("gameOverOverlay").style.display = "flex";
+      document.getElementById("statsCard").textContent = "You jumped " + Math.floor(score * 0.5) + " times and ran " + Math.floor(score) + " m!";
     }
-    // Restart without saving
     function restartGame() {
       resetGame();
-      gameOverOverlay.style.display = "none";
+      document.getElementById("gameOverOverlay").style.display = "none";
       gameState = "running";
       lastTimestamp = performance.now();
       requestAnimationFrame(gameLoop);
     }
-    // Save score only if higher than the stored best score
     function saveScoreAndRestart() {
       let bestScore = parseInt(localStorage.getItem("bestScore") || "0");
       if (score > bestScore) {
@@ -937,23 +814,45 @@
     }
     
     // ===============================
-    // Control Button Event Listeners for Game Over Overlay
+    // INITIALIZE VOICE COMMANDS
     // ===============================
-    document.getElementById("restartWithoutSaveButton").addEventListener("click", restartGame);
-    document.getElementById("saveAndRestartButton").addEventListener("click", saveScoreAndRestart);
+    function setupVoiceCommands() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.lang = languageSelect.value;
+        recognition.onresult = function(event) {
+          const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+          if (transcript.includes("jump") && gameState === "running" && player.onGround) {
+            player.vy = player.jumpForce;
+            player.onGround = false;
+            if (soundEnabled) jumpSound.play();
+          }
+          if (transcript.includes("pause") && gameState === "running") {
+            isPaused = true;
+            gameState = "paused";
+            pauseOverlay.style.display = "flex";
+          }
+          if (transcript.includes("resume") && gameState === "paused") {
+            isPaused = false;
+            pauseOverlay.style.display = "none";
+            gameState = "running";
+            lastTimestamp = performance.now();
+            requestAnimationFrame(gameLoop);
+          }
+        };
+        recognition.start();
+      } else {
+        console.log("Voice commands not supported.");
+      }
+    }
+    setupVoiceCommands();
     
     // ===============================
-    // Accessibility: Set ARIA roles for Overlays
+    // MAIN GAME LOOP STARTS WHEN "Start Game" is pressed
     // ===============================
-    startOverlay.setAttribute("role", "dialog");
-    gameOverOverlay.setAttribute("role", "alertdialog");
-    settingsOverlay.setAttribute("role", "dialog");
-    highScoresOverlay.setAttribute("role", "dialog");
-    
-    // ===============================
-    // Start the Game Loop (triggered from Start Overlay)
-    // ===============================
-    // (The game loop starts when the "Start Game" button is pressed.)
+    // (The game loop is triggered by the Start Game button above.)
   </script>
 </body>
 </html>

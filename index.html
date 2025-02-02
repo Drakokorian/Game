@@ -19,14 +19,12 @@
       display: block;
       background: #1e1e1e;
     }
-    /* Overlays (all use .overlay class) */
+    /* Overlay styles */
     .overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
       display: none;
       flex-direction: column;
       justify-content: center;
@@ -55,14 +53,14 @@
     }
     /* Specific overlays */
     #startOverlay { display: flex; }
-    #tutorialOverlay { background: rgba(0, 0, 0, 0.7); }
-    #gameOverOverlay { background: rgba(0, 0, 0, 0.9); }
-    #pauseOverlay { background: rgba(0, 0, 0, 0.9); font-size: 2em; }
+    #tutorialOverlay { background: rgba(0,0,0,0.7); }
+    #gameOverOverlay { background: rgba(0,0,0,0.9); }
+    #pauseOverlay { background: rgba(0,0,0,0.9); font-size: 2em; }
     /* Control Buttons */
     .controlButton {
       position: absolute;
       top: 10px;
-      padding: 8px 12px;  /* Smaller button */
+      padding: 8px 12px;
       background: #ffeb3b;
       border: none;
       border-radius: 5px;
@@ -77,16 +75,16 @@
     #pauseButton { right: 10px; top: 60px; }
     #creditsButtonControl { right: 10px; top: 120px; }
     #questsButton { right: 10px; top: 180px; }
-    /* On-Screen Jump Button for Mobile */
+    /* On-Screen Jump Button (smaller for mobile) */
     #onScreenJumpButton {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      padding: 10px;         /* Smaller padding */
+      padding: 10px;
       background: #ffeb3b;
       border: none;
       border-radius: 50%;
-      font-size: 0.8em;      /* Smaller font-size */
+      font-size: 0.8em;
       cursor: pointer;
       z-index: 1100;
       color: #121212;
@@ -97,7 +95,7 @@
       top: 80px;
       right: 10px;
       font-size: 1.2em;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       padding: 5px 10px;
       border-radius: 5px;
       z-index: 1050;
@@ -110,12 +108,10 @@
   <canvas id="gameCanvas" role="img" aria-label="Game canvas"></canvas>
   
   <!-- Overlays -->
-  <!-- Start Overlay (Character & Language Selection) -->
   <div id="startOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="startTitle">
     <h1 id="startTitle">Ultimate Dark Runner for Kids</h1>
     <p>Select your character:</p>
     <div id="characterSelection">
-      <!-- These buttons do not use inline onclick; event listeners are attached in the script -->
       <button class="charButton">Red Runner</button>
       <button class="charButton">Blue Bolt</button>
       <button class="charButton">Green Flash</button>
@@ -132,12 +128,10 @@
     <button id="startGameButton" aria-label="Start game">Start Game</button>
   </div>
   
-  <!-- Tutorial Overlay (shown for 3 seconds) -->
   <div id="tutorialOverlay" class="overlay" role="alertdialog" aria-live="polite">
     <p>How to Play: Tap the screen or press Spacebar to jump. Avoid obstacles and collect power-ups!</p>
   </div>
   
-  <!-- Game Over Overlay -->
   <div id="gameOverOverlay" class="overlay" role="alertdialog" aria-live="assertive">
     <h1>Game Over</h1>
     <button id="restartWithoutSaveButton" aria-label="Restart without saving">Restart</button>
@@ -145,13 +139,11 @@
     <p id="statsCard"></p>
   </div>
   
-  <!-- Pause Overlay -->
   <div id="pauseOverlay" class="overlay" role="alertdialog" aria-live="assertive">
     <p>Game Paused</p>
     <button id="resumeButton" aria-label="Resume game">Resume</button>
   </div>
   
-  <!-- Settings Overlay -->
   <div id="settingsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
     <h2 id="settingsTitle">Settings</h2>
     <label for="soundToggle">Sound:</label>
@@ -163,14 +155,12 @@
     <button id="closeSettingsButton" aria-label="Close settings">Close</button>
   </div>
   
-  <!-- High Scores Overlay -->
   <div id="highScoresOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="highScoresTitle">
     <h2 id="highScoresTitle">High Scores</h2>
     <ul id="highScoresList" style="list-style: none; padding: 0;"></ul>
     <button id="closeHighScoresButton" aria-label="Close high scores">Close</button>
   </div>
   
-  <!-- Credits Overlay -->
   <div id="creditsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle">
     <h2 id="creditsTitle">Credits</h2>
     <p>Developed by Your Name</p>
@@ -178,28 +168,24 @@
     <button id="closeCreditsButton" aria-label="Close credits">Close</button>
   </div>
   
-  <!-- Daily Challenges Overlay -->
   <div id="dailyChallengesOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="dailyChallengesTitle">
     <h2 id="dailyChallengesTitle">Daily Challenges</h2>
     <p>Challenge: Jump over 5 obstacles in one run!</p>
     <button id="closeDailyChallengesButton" aria-label="Close daily challenges">Close</button>
   </div>
   
-  <!-- Quests Overlay -->
   <div id="questsOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="questsTitle">
     <h2 id="questsTitle">Tiny Quests</h2>
     <p>Quest: Collect 3 items without colliding!</p>
     <button id="closeQuestsButton" aria-label="Close quests">Close</button>
   </div>
   
-  <!-- Sticker Book Overlay -->
   <div id="stickerBookOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="stickerBookTitle">
     <h2 id="stickerBookTitle">Sticker Book</h2>
     <p>Your stickers will appear here!</p>
     <button id="closeStickerBookButton" aria-label="Close sticker book">Close</button>
   </div>
   
-  <!-- Parental Dashboard Overlay -->
   <div id="parentalDashboardOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="parentalDashboardTitle">
     <h2 id="parentalDashboardTitle">Parental Dashboard</h2>
     <p>Time Played: <span id="timePlayed">0</span> minutes</p>
@@ -223,459 +209,394 @@
   <!-- Active Power-Up Timer Display -->
   <div id="powerUpDisplay" aria-live="polite"></div>
   
+  <!-- Main Script (all code below will run after the DOM is fully loaded) -->
   <script defer>
     "use strict";
-    // ===============================
-    // GLOBAL VARIABLES & INITIALIZATION
-    // ===============================
-    let gameState = "menu"; // "menu", "running", "paused", "gameover"
-    let score = 0;
-    let level = 1;
-    const levelThreshold = 100;
-    let lastTimestamp = 0;
-    let obstacleSpeed = 5;
-    let obstacleInterval = 2000;
-    let obstacleTimer = 0;
-    let scoreMultiplier = 1;
-    
-    // POWER-UP VARIABLES
-    let flightEnabled = false, flightTimer = 0;
-    let highJumpEnabled = false, highJumpTimer = 0;
-    let multiplierActive = false, multiplierTimer = 0;
-    
-    // SOUND SETUP
-    let soundEnabled = true;
-    
-    // ===============================
-    // PLAYER OBJECT
-    // ===============================
-    let player = {
-      x: 50,
-      y: canvas.height - 150,
-      width: 50,
-      height: 50,
-      vy: 0,
-      jumpForce: -15,
-      gravity: 0.8,
-      onGround: true
-    };
-    
-    // ===============================
-    // OBSTACLES & ITEMS
-    // ===============================
-    let obstacles = [];
-    const obstacleColors = {
-      ground: "#88d8b0",
-      flying: "#ffab91",
-      platform: "#a29bfe",
-      rotating: "#f39c12",
-      item: "#55efc4"
-    };
-    
-    // ===============================
-    // ANIMATED BACKGROUND: CLOUDS
-    // ===============================
-    let clouds = [];
-    function spawnCloud() {
-      clouds.push({
-        x: canvas.width,
-        y: Math.random() * canvas.height / 3,
-        radius: 20 + Math.random() * 30,
-        speed: 0.5 + Math.random()
-      });
-    }
-    function updateClouds(deltaTime) {
-      clouds.forEach(cloud => { cloud.x -= cloud.speed; });
-      clouds = clouds.filter(cloud => cloud.x + cloud.radius > 0);
-      if (clouds.length < 5) spawnCloud();
-    }
-    function renderClouds() {
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      clouds.forEach(cloud => {
-        ctx.beginPath();
-        ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-    
-    // ===============================
-    // PARTICLE SYSTEM (for item collection)
-    // ===============================
-    let particles = [];
-    function spawnParticles(x, y, color) {
-      for (let i = 0; i < 10; i++) {
-        particles.push({
-          x: x,
-          y: y,
-          vx: (Math.random() - 0.5) * 4,
-          vy: (Math.random() - 0.5) * 4,
-          alpha: 1,
-          color: color
+    document.addEventListener("DOMContentLoaded", function() {
+      // --- Global Variables ---
+      let gameState = "menu"; // "menu", "running", "paused", "gameover"
+      let score = 0;
+      let level = 1;
+      const levelThreshold = 100;
+      let lastTimestamp = 0;
+      let obstacleSpeed = 5;
+      let obstacleInterval = 2000;
+      let obstacleTimer = 0;
+      let scoreMultiplier = 1;
+      
+      // Power-up Variables
+      let flightEnabled = false, flightTimer = 0;
+      let highJumpEnabled = false, highJumpTimer = 0;
+      let multiplierActive = false, multiplierTimer = 0;
+      
+      // Sound Setup
+      let soundEnabled = true;
+      
+      // Player Object
+      let player = {
+        x: 50,
+        y: canvas.height - 150,
+        width: 50,
+        height: 50,
+        vy: 0,
+        jumpForce: -15,
+        gravity: 0.8,
+        onGround: true
+      };
+      
+      // Obstacles & Items
+      let obstacles = [];
+      const obstacleColors = {
+        ground: "#88d8b0",
+        flying: "#ffab91",
+        platform: "#a29bfe",
+        rotating: "#f39c12",
+        item: "#55efc4"
+      };
+      
+      // Animated Background: Clouds
+      let clouds = [];
+      function spawnCloud() {
+        clouds.push({
+          x: canvas.width,
+          y: Math.random() * canvas.height / 3,
+          radius: 20 + Math.random() * 30,
+          speed: 0.5 + Math.random()
         });
       }
-    }
-    function updateParticles(deltaTime) {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        particles[i].x += particles[i].vx;
-        particles[i].y += particles[i].vy;
-        particles[i].alpha -= deltaTime * 0.001;
-        if (particles[i].alpha <= 0) particles.splice(i, 1);
+      function updateClouds(deltaTime) {
+        clouds.forEach(cloud => { cloud.x -= cloud.speed; });
+        clouds = clouds.filter(cloud => cloud.x + cloud.radius > 0);
+        if (clouds.length < 5) spawnCloud();
       }
-    }
-    function renderParticles() {
-      particles.forEach(p => {
-        ctx.save();
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      });
-    }
-    
-    // ===============================
-    // ROTATING OBSTACLE UPDATE
-    // ===============================
-    function updateRotatingObstacle(obs, deltaTime) {
-      if (!obs.angle) { obs.angle = 0; obs.rotationSpeed = 0.05 + Math.random() * 0.05; }
-      obs.angle += obs.rotationSpeed * deltaTime * 0.001;
-    }
-    
-    // ===============================
-    // VOICE COMMANDS (Web Speech API)
-    // ===============================
-    function setupVoiceCommands() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.lang = languageSelect.value;
-        recognition.onresult = function(event) {
-          const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
-          if (transcript.includes("jump") && gameState === "running" && player.onGround) {
-            player.vy = player.jumpForce;
-            player.onGround = false;
-            if (soundEnabled) jumpSound.play();
-          }
-          if (transcript.includes("pause") && gameState === "running") {
-            isPaused = true;
-            gameState = "paused";
-            pauseOverlay.style.display = "flex";
-          }
-          if (transcript.includes("resume") && gameState === "paused") {
-            isPaused = false;
-            pauseOverlay.style.display = "none";
-            gameState = "running";
-            lastTimestamp = performance.now();
-            requestAnimationFrame(gameLoop);
-          }
-        };
-        recognition.start();
-      } else {
-        console.log("Voice commands not supported.");
+      function renderClouds() {
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
+        clouds.forEach(cloud => {
+          ctx.beginPath();
+          ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
+          ctx.fill();
+        });
       }
-    }
-    setupVoiceCommands();
-    
-    // ===============================
-    // SECRET RAINBOW MODE (Activated by typing "rainbow")
-    // ===============================
-    let rainbowModeActive = false;
-    let rainbowModeKeys = "";
-    document.addEventListener("keydown", function(e) {
-      rainbowModeKeys += e.key.toLowerCase();
-      if (rainbowModeKeys.endsWith("rainbow")) {
-        rainbowModeActive = !rainbowModeActive;
-        console.log("Rainbow Mode:", rainbowModeActive ? "Activated" : "Deactivated");
-        if (rainbowModeActive) {
-          obstacleColors.ground = "#ff0000";
-          obstacleColors.flying = "#00ff00";
-          obstacleColors.platform = "#0000ff";
-          obstacleColors.rotating = "#ffff00";
-          obstacleColors.item = "#ff00ff";
+      
+      // Particle System
+      let particles = [];
+      function spawnParticles(x, y, color) {
+        for (let i = 0; i < 10; i++) {
+          particles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            alpha: 1,
+            color: color
+          });
+        }
+      }
+      function updateParticles(deltaTime) {
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].x += particles[i].vx;
+          particles[i].y += particles[i].vy;
+          particles[i].alpha -= deltaTime * 0.001;
+          if (particles[i].alpha <= 0) particles.splice(i, 1);
+        }
+      }
+      function renderParticles() {
+        particles.forEach(p => {
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+      
+      // Rotating Obstacle Update
+      function updateRotatingObstacle(obs, deltaTime) {
+        if (!obs.angle) { obs.angle = 0; obs.rotationSpeed = 0.05 + Math.random() * 0.05; }
+        obs.angle += obs.rotationSpeed * deltaTime * 0.001;
+      }
+      
+      // Voice Commands Setup
+      function setupVoiceCommands() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          const recognition = new SpeechRecognition();
+          recognition.continuous = true;
+          recognition.lang = languageSelect.value;
+          recognition.onresult = function(event) {
+            const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+            if (transcript.includes("jump") && gameState === "running" && player.onGround) {
+              player.vy = player.jumpForce;
+              player.onGround = false;
+              if (soundEnabled) jumpSound.play();
+            }
+            if (transcript.includes("pause") && gameState === "running") {
+              isPaused = true;
+              gameState = "paused";
+              document.getElementById("pauseOverlay").style.display = "flex";
+            }
+            if (transcript.includes("resume") && gameState === "paused") {
+              isPaused = false;
+              document.getElementById("pauseOverlay").style.display = "none";
+              gameState = "running";
+              lastTimestamp = performance.now();
+              requestAnimationFrame(gameLoop);
+            }
+          };
+          recognition.start();
         } else {
-          obstacleColors.ground = "#88d8b0";
-          obstacleColors.flying = "#ffab91";
-          obstacleColors.platform = "#a29bfe";
-          obstacleColors.rotating = "#f39c12";
-          obstacleColors.item = "#55efc4";
+          console.log("Voice commands not supported.");
         }
-        rainbowModeKeys = "";
       }
-    });
-    
-    // ===============================
-    // ON-SCREEN JUMP BUTTON (for touch devices)
-    // ===============================
-    document.getElementById("onScreenJumpButton").addEventListener("click", function() {
-      if (gameState === "running" && player.onGround) {
-        player.vy = player.jumpForce;
-        player.onGround = false;
-        if (soundEnabled) jumpSound.play();
-      }
-    });
-    
-    // ===============================
-    // MAIN GAME LOOP FUNCTIONS
-    // ===============================
-    function update(deltaTime) {
-      if (gameState === "running") {
-        score += deltaTime * 0.01 * scoreMultiplier;
-        if (score >= level * levelThreshold) {
-          level++;
-          if (soundEnabled) levelUpSound.play();
-          console.log("Level " + level);
-          obstacleSpeed += 0.5;
-          if (obstacleInterval > 500) obstacleInterval -= 100;
-        }
-        updatePowerUps(deltaTime);
-        updateClouds(deltaTime);
-        updateParticles(deltaTime);
-        // Player physics update
-        player.vy += player.gravity;
-        player.y += player.vy;
-        if (player.y + player.height >= canvas.height - 50) {
-          player.y = canvas.height - 50 - player.height;
-          player.vy = 0;
-          player.onGround = true;
-        }
-        // Spawn obstacles
-        obstacleTimer += deltaTime;
-        if (obstacleTimer >= obstacleInterval) {
-          spawnObstacle();
-          obstacleTimer = 0;
-        }
-        // Update obstacles and collision detection
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-          if (obstacles[i].type === "rotating") {
-            updateRotatingObstacle(obstacles[i], deltaTime);
+      setupVoiceCommands();
+      
+      // Secret Rainbow Mode
+      let rainbowModeActive = false;
+      let rainbowModeKeys = "";
+      document.addEventListener("keydown", function(e) {
+        rainbowModeKeys += e.key.toLowerCase();
+        if (rainbowModeKeys.endsWith("rainbow")) {
+          rainbowModeActive = !rainbowModeActive;
+          console.log("Rainbow Mode:", rainbowModeActive ? "Activated" : "Deactivated");
+          if (rainbowModeActive) {
+            obstacleColors.ground = "#ff0000";
+            obstacleColors.flying = "#00ff00";
+            obstacleColors.platform = "#0000ff";
+            obstacleColors.rotating = "#ffff00";
+            obstacleColors.item = "#ff00ff";
+          } else {
+            obstacleColors.ground = "#88d8b0";
+            obstacleColors.flying = "#ffab91";
+            obstacleColors.platform = "#a29bfe";
+            obstacleColors.rotating = "#f39c12";
+            obstacleColors.item = "#55efc4";
           }
-          obstacles[i].x -= obstacleSpeed;
-          if (obstacles[i].x + obstacles[i].width < 0) {
-            obstacles.splice(i, 1);
-            continue;
+          rainbowModeKeys = "";
+        }
+      });
+      
+      // On-Screen Jump Button
+      document.getElementById("onScreenJumpButton").addEventListener("click", function() {
+        if (gameState === "running" && player.onGround) {
+          player.vy = player.jumpForce;
+          player.onGround = false;
+          if (soundEnabled) jumpSound.play();
+        }
+      });
+      
+      // Main Game Loop Functions
+      function update(deltaTime) {
+        if (gameState === "running") {
+          score += deltaTime * 0.01 * scoreMultiplier;
+          if (score >= level * levelThreshold) {
+            level++;
+            if (soundEnabled) levelUpSound.play();
+            console.log("Level " + level);
+            obstacleSpeed += 0.5;
+            if (obstacleInterval > 500) obstacleInterval -= 100;
           }
-          if (rectIntersect(player, obstacles[i])) {
-            if (obstacles[i].type === "item") {
-              if (obstacles[i].itemType === "flight") {
-                enableFlight();
-              } else if (obstacles[i].itemType === "highjump") {
-                enableHighJump();
-              } else if (obstacles[i].itemType === "multiplier") {
-                enableMultiplier();
-              }
-              spawnParticles(player.x + player.width/2, player.y + player.height/2, "#55efc4");
+          updatePowerUps(deltaTime);
+          updateClouds(deltaTime);
+          updateParticles(deltaTime);
+          // Player physics update
+          player.vy += player.gravity;
+          player.y += player.vy;
+          if (player.y + player.height >= canvas.height - 50) {
+            player.y = canvas.height - 50 - player.height;
+            player.vy = 0;
+            player.onGround = true;
+          }
+          // Spawn obstacles
+          obstacleTimer += deltaTime;
+          if (obstacleTimer >= obstacleInterval) {
+            spawnObstacle();
+            obstacleTimer = 0;
+          }
+          // Update obstacles and collision detection
+          for (let i = obstacles.length - 1; i >= 0; i--) {
+            if (obstacles[i].type === "rotating") {
+              updateRotatingObstacle(obstacles[i], deltaTime);
+            }
+            obstacles[i].x -= obstacleSpeed;
+            if (obstacles[i].x + obstacles[i].width < 0) {
               obstacles.splice(i, 1);
-            } else if (obstacles[i].type === "platform") {
-              if (player.vy >= 0 && player.y + player.height - 10 < obstacles[i].y) {
-                player.y = obstacles[i].y - player.height;
-                player.vy = 0;
-                player.onGround = true;
+              continue;
+            }
+            if (rectIntersect(player, obstacles[i])) {
+              if (obstacles[i].type === "item") {
+                if (obstacles[i].itemType === "flight") {
+                  flightEnabled = true;
+                  flightTimer = 5000;
+                  player.originalGravity = player.gravity;
+                  player.gravity = 0.2;
+                  if (soundEnabled) powerUpSound.play();
+                } else if (obstacles[i].itemType === "highjump") {
+                  highJumpEnabled = true;
+                  highJumpTimer = 5000;
+                  player.originalJumpForce = player.jumpForce;
+                  player.jumpForce *= 1.5;
+                  if (soundEnabled) powerUpSound.play();
+                } else if (obstacles[i].itemType === "multiplier") {
+                  multiplierActive = true;
+                  multiplierTimer = 5000;
+                  scoreMultiplier = 2;
+                  if (soundEnabled) multiplierSound.play();
+                }
+                spawnParticles(player.x + player.width/2, player.y + player.height/2, "#55efc4");
+                obstacles.splice(i, 1);
+              } else if (obstacles[i].type === "platform") {
+                if (player.vy >= 0 && player.y + player.height - 10 < obstacles[i].y) {
+                  player.y = obstacles[i].y - player.height;
+                  player.vy = 0;
+                  player.onGround = true;
+                }
+              } else {
+                gameState = "gameover";
+                showGameOverOverlay();
+                return;
               }
-            } else {
-              gameState = "gameover";
-              showGameOverOverlay();
-              return;
             }
           }
         }
       }
-    }
-    
-    function updatePowerUps(deltaTime) {
-      if (flightEnabled) {
-        flightTimer -= deltaTime;
-        if (flightTimer <= 0) {
-          flightEnabled = false;
-          player.gravity = player.originalGravity;
+      
+      function updatePowerUps(deltaTime) {
+        if (flightEnabled) {
+          flightTimer -= deltaTime;
+          if (flightTimer <= 0) {
+            flightEnabled = false;
+            player.gravity = player.originalGravity;
+          }
+        }
+        if (highJumpEnabled) {
+          highJumpTimer -= deltaTime;
+          if (highJumpTimer <= 0) {
+            highJumpEnabled = false;
+            player.jumpForce = player.originalJumpForce;
+          }
+        }
+        if (multiplierActive) {
+          multiplierTimer -= deltaTime;
+          if (multiplierTimer <= 0) {
+            multiplierActive = false;
+            scoreMultiplier = 1;
+          }
         }
       }
-      if (highJumpEnabled) {
-        highJumpTimer -= deltaTime;
-        if (highJumpTimer <= 0) {
-          highJumpEnabled = false;
-          player.jumpForce = player.originalJumpForce;
-        }
-      }
-      if (multiplierActive) {
-        multiplierTimer -= deltaTime;
-        if (multiplierTimer <= 0) {
-          multiplierActive = false;
-          scoreMultiplier = 1;
-        }
-      }
-    }
-    
-    function render() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Dynamic background gradient based on level
-      let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      if (level < 5) {
-        grad.addColorStop(0, "#2c3e50");
-        grad.addColorStop(1, "#34495e");
-      } else if (level < 10) {
-        grad.addColorStop(0, "#1c1c1c");
-        grad.addColorStop(1, "#2f2f2f");
-      } else {
-        grad.addColorStop(0, "#000000");
-        grad.addColorStop(1, "#121212");
-      }
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // Render clouds and scrolling ground
-      renderClouds();
-      ctx.fillStyle = "#1c2833";
-      ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
-      // Draw player (gold if flight active, else red)
-      ctx.fillStyle = flightEnabled ? "#f1c40f" : "#e74c3c";
-      ctx.beginPath();
-      ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/3, 0, Math.PI);
-      ctx.stroke();
-      // Draw obstacles (with rotation if needed)
-      obstacles.forEach(obs => {
-        if (obs.type === "rotating") {
-          ctx.save();
-          ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
-          ctx.rotate(obs.angle || 0);
-          ctx.fillStyle = obs.color;
-          ctx.fillRect(-obs.width/2, -obs.height/2, obs.width, obs.height);
-          ctx.restore();
+      
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Dynamic background gradient based on level
+        let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        if (level < 5) {
+          grad.addColorStop(0, "#2c3e50");
+          grad.addColorStop(1, "#34495e");
+        } else if (level < 10) {
+          grad.addColorStop(0, "#1c1c1c");
+          grad.addColorStop(1, "#2f2f2f");
         } else {
-          ctx.fillStyle = obs.color;
-          ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+          grad.addColorStop(0, "#000000");
+          grad.addColorStop(1, "#121212");
         }
-      });
-      // Render particles
-      renderParticles();
-      // Draw centered score and level
-      ctx.fillStyle = "#ecf0f1";
-      ctx.font = "24px Comic Sans MS";
-      let scoreText = "Score: " + Math.floor(score);
-      let levelText = "Level: " + level;
-      let scoreWidth = ctx.measureText(scoreText).width;
-      let levelWidth = ctx.measureText(levelText).width;
-      ctx.fillText(scoreText, (canvas.width - scoreWidth) / 2, 30);
-      ctx.fillText(levelText, (canvas.width - levelWidth) / 2, 60);
-      // Display active power-up timers
-      let powerUpDisplay = document.getElementById("powerUpDisplay");
-      let displayText = "";
-      if (flightEnabled) displayText += "Flight: " + Math.ceil(flightTimer/1000) + "s ";
-      if (highJumpEnabled) displayText += "High Jump: " + Math.ceil(highJumpTimer/1000) + "s ";
-      if (multiplierActive) displayText += "Multiplier: " + Math.ceil(multiplierTimer/1000) + "s ";
-      powerUpDisplay.textContent = displayText;
-    }
-    
-    function gameLoop(timestamp) {
-      const deltaTime = timestamp - lastTimestamp;
-      lastTimestamp = timestamp;
-      update(deltaTime);
-      render();
-      if (gameState === "running") requestAnimationFrame(gameLoop);
-    }
-    
-    // ===============================
-    // RESTART & GAME OVER FUNCTIONS
-    // ===============================
-    function resetGame() {
-      score = 0;
-      level = 1;
-      obstacles = [];
-      player.y = canvas.height - 150;
-      player.vy = 0;
-    }
-    function showGameOverOverlay() {
-      document.getElementById("gameOverOverlay").style.display = "flex";
-      document.getElementById("statsCard").textContent = "You jumped " + Math.floor(score * 0.5) + " times and ran " + Math.floor(score) + " m!";
-    }
-    function restartGame() {
-      resetGame();
-      document.getElementById("gameOverOverlay").style.display = "none";
-      gameState = "running";
-      lastTimestamp = performance.now();
-      requestAnimationFrame(gameLoop);
-    }
-    function saveScoreAndRestart() {
-      let bestScore = parseInt(localStorage.getItem("bestScore") || "0");
-      if (score > bestScore) {
-        localStorage.setItem("bestScore", Math.floor(score));
-        alert("New high score saved!");
-      } else {
-        alert("Score not high enough. Your best score remains " + bestScore);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Render clouds and scrolling ground
+        renderClouds();
+        ctx.fillStyle = "#1c2833";
+        ctx.fillRect(0, canvas.height - 50, canvas.width, canvas.height);
+        // Draw player (gold if flight active, red otherwise)
+        ctx.fillStyle = flightEnabled ? "#f1c40f" : "#e74c3c";
+        ctx.beginPath();
+        ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/2, 0, Math.PI*2);
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(player.x + player.width/2, player.y + player.height/2, player.width/3, 0, Math.PI);
+        ctx.stroke();
+        // Draw obstacles (rotate if necessary)
+        obstacles.forEach(obs => {
+          if (obs.type === "rotating") {
+            ctx.save();
+            ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
+            ctx.rotate(obs.angle || 0);
+            ctx.fillStyle = obs.color;
+            ctx.fillRect(-obs.width/2, -obs.height/2, obs.width, obs.height);
+            ctx.restore();
+          } else {
+            ctx.fillStyle = obs.color;
+            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+          }
+        });
+        // Render particles
+        renderParticles();
+        // Draw centered score and level
+        ctx.fillStyle = "#ecf0f1";
+        ctx.font = "24px Comic Sans MS";
+        let scoreText = "Score: " + Math.floor(score);
+        let levelText = "Level: " + level;
+        let scoreWidth = ctx.measureText(scoreText).width;
+        let levelWidth = ctx.measureText(levelText).width;
+        ctx.fillText(scoreText, (canvas.width - scoreWidth) / 2, 30);
+        ctx.fillText(levelText, (canvas.width - levelWidth) / 2, 60);
+        // Display active power-up timers
+        let powerUpDisplay = document.getElementById("powerUpDisplay");
+        let displayText = "";
+        if (flightEnabled) displayText += "Flight: " + Math.ceil(flightTimer/1000) + "s ";
+        if (highJumpEnabled) displayText += "High Jump: " + Math.ceil(highJumpTimer/1000) + "s ";
+        if (multiplierActive) displayText += "Multiplier: " + Math.ceil(multiplierTimer/1000) + "s ";
+        powerUpDisplay.textContent = displayText;
       }
-      restartGame();
-    }
-    document.getElementById("restartWithoutSaveButton").addEventListener("click", restartGame);
-    document.getElementById("saveAndRestartButton").addEventListener("click", saveScoreAndRestart);
-    
-    // ===============================
-    // POWER-UP FUNCTIONS
-    // ===============================
-    function enableFlight() {
-      flightEnabled = true;
-      flightTimer = 5000;
-      player.originalGravity = player.gravity;
-      player.gravity = 0.2;
-      if (soundEnabled) powerUpSound.play();
-      spawnParticles(player.x + player.width/2, player.y + player.height/2, "#f1c40f");
-    }
-    function enableHighJump() {
-      highJumpEnabled = true;
-      highJumpTimer = 5000;
-      player.originalJumpForce = player.jumpForce;
-      player.jumpForce *= 1.5;
-      if (soundEnabled) powerUpSound.play();
-      spawnParticles(player.x + player.width/2, player.y + player.height/2, "#a29bfe");
-    }
-    function enableMultiplier() {
-      multiplierActive = true;
-      multiplierTimer = 5000;
-      scoreMultiplier = 2;
-      if (soundEnabled) multiplierSound.play();
-      spawnParticles(player.x + player.width/2, player.y + player.height/2, "#55efc4");
-    }
-    
-    // ===============================
-    // VOICE COMMANDS (Using Web Speech API)
-    // ===============================
-    // (Already set up above in setupVoiceCommands())
-    
-    // ===============================
-    // SECRET RAINBOW MODE
-    // ===============================
-    let rainbowModeActive = false;
-    let rainbowModeKeys = "";
-    document.addEventListener("keydown", function(e) {
-      rainbowModeKeys += e.key.toLowerCase();
-      if (rainbowModeKeys.endsWith("rainbow")) {
-        rainbowModeActive = !rainbowModeActive;
-        console.log("Rainbow Mode:", rainbowModeActive ? "Activated" : "Deactivated");
-        if (rainbowModeActive) {
-          obstacleColors.ground = "#ff0000";
-          obstacleColors.flying = "#00ff00";
-          obstacleColors.platform = "#0000ff";
-          obstacleColors.rotating = "#ffff00";
-          obstacleColors.item = "#ff00ff";
+      
+      function gameLoop(timestamp) {
+        const deltaTime = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+        update(deltaTime);
+        render();
+        if (gameState === "running") {
+          requestAnimationFrame(gameLoop);
+        }
+      }
+      
+      // Restart & Game Over Functions
+      function resetGame() {
+        score = 0;
+        level = 1;
+        obstacles = [];
+        player.y = canvas.height - 150;
+        player.vy = 0;
+      }
+      function showGameOverOverlay() {
+        document.getElementById("gameOverOverlay").style.display = "flex";
+        document.getElementById("statsCard").textContent = "You jumped " + Math.floor(score * 0.5) + " times and ran " + Math.floor(score) + " m!";
+      }
+      function restartGame() {
+        resetGame();
+        document.getElementById("gameOverOverlay").style.display = "none";
+        gameState = "running";
+        lastTimestamp = performance.now();
+        requestAnimationFrame(gameLoop);
+      }
+      function saveScoreAndRestart() {
+        let bestScore = parseInt(localStorage.getItem("bestScore") || "0");
+        if (score > bestScore) {
+          localStorage.setItem("bestScore", Math.floor(score));
+          alert("New high score saved!");
         } else {
-          obstacleColors.ground = "#88d8b0";
-          obstacleColors.flying = "#ffab91";
-          obstacleColors.platform = "#a29bfe";
-          obstacleColors.rotating = "#f39c12";
-          obstacleColors.item = "#55efc4";
+          alert("Score not high enough. Your best score remains " + bestScore);
         }
-        rainbowModeKeys = "";
+        restartGame();
       }
-    });
-    
-    // ===============================
-    // MAIN GAME LOOP START (Triggered by Start Game Button)
-    // ===============================
-    // (The game loop begins when the Start Game button is clicked in the start overlay.)
+      document.getElementById("restartWithoutSaveButton").addEventListener("click", restartGame);
+      document.getElementById("saveAndRestartButton").addEventListener("click", saveScoreAndRestart);
+      
+      // ===============================
+      // END OF DOMContentLoaded – Start Game Loop When Ready
+      // ===============================
+    }); // End of DOMContentLoaded event listener
+    // Note: The game loop starts only when the Start Game button is pressed.
   </script>
 </body>
 </html>

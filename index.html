@@ -1,0 +1,676 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Clicker for Kids – Epic Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Main CSS for a playful, child-friendly design */
+    body {
+      background: #f0f8ff;
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+    }
+    header {
+      background: #ffcc00;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+    #gameContainer {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      border: 3px solid #ffcc00;
+      border-radius: 15px;
+      padding: 20px;
+      position: relative;
+    }
+    #instructions {
+      font-size: 1.5em;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    #cookie {
+      width: 220px;
+      height: 220px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border-radius: 50%;
+      border: 5px solid transparent;
+    }
+    .clicked {
+      transform: scale(1.15);
+      border-color: #ff66cc;
+    }
+    .info {
+      font-size: 1.8em;
+      margin: 10px;
+    }
+    #levelDisplay {
+      font-weight: bold;
+    }
+    #levelUpMessage {
+      font-size: 2em;
+      color: #ff6600;
+      position: absolute;
+      top: 10%;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    #adContainer {
+      margin: 20px 0;
+      padding: 15px;
+      background: #e0e0e0;
+      border: 2px dashed #999;
+      border-radius: 10px;
+    }
+    #store, #highScores {
+      margin: 20px 0;
+      text-align: left;
+      padding: 15px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+    button {
+      font-size: 1em;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #ffcc00;
+      color: #333;
+    }
+    button:hover {
+      background: #ffdb4d;
+    }
+    /* Language overlay styling */
+    #languageOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #languageOverlay h2 {
+      color: #fff;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+    #languageSelect {
+      font-size: 1.2em;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    /* Settings overlay styling */
+    #settingsBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1001;
+    }
+    #settingsOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+    #settingsOverlay h2 {
+      color: #fff;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+    #settingsOverlay label {
+      color: #fff;
+      font-size: 1.2em;
+    }
+    #avatarSelection {
+      margin-top: 20px;
+    }
+    #avatarSelection h3 {
+      color: #fff;
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+    #avatarPreview {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cookie Clicker for Kids – Epic Edition</h1>
+  </header>
+  <div id="gameContainer">
+    <div id="instructions">Tap the cookie to earn points and level up! The game gets more challenging as you progress.</div>
+    <div class="info">Score: <span id="scoreDisplay">0</span></div>
+    <div class="info">Level: <span id="levelDisplay">1</span></div>
+    <img id="cookie" src="https://via.placeholder.com/220.png?text=Delicious+Cookie" alt="Cookie">
+    <div id="levelUpMessage"></div>
+    <div>
+      <button id="saveScoreBtn">Save High Score</button>
+    </div>
+    <div id="highScores">
+      <h2>High Scores (Max 3 Saves)</h2>
+      <ul id="highScoreList"></ul>
+    </div>
+    <div id="store">
+      <h2>Store (Cosmetics - 49¢ each)</h2>
+      <div class="storeItem">
+        <span>Magic Cookie Border</span>
+        <button id="buyBorderBtn">Buy</button>
+        <button id="applyBorderBtn">Apply</button>
+        <span id="status-border"></span>
+      </div>
+      <div class="storeItem">
+        <span>Fun Background</span>
+        <button id="buyBgBtn">Buy</button>
+        <button id="applyBgBtn">Apply</button>
+        <span id="status-background"></span>
+      </div>
+      <div class="storeItem">
+        <span>New Avatar</span>
+        <button id="buyAvatarBtn">Buy New Avatar</button>
+        <button id="applyAvatarBtn">Apply New Avatar</button>
+        <span id="status-avatar"></span>
+      </div>
+    </div>
+    <div id="adContainer">
+      <p>Advertisement</p>
+      <!-- Ad network integration goes here -->
+    </div>
+  </div>
+  <audio id="clickSound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+  
+  <!-- Language Selection Overlay -->
+  <div id="languageOverlay">
+    <h2>Select Language / भाषा चुनें / மொழியை தேர்வு செய்க / భాషను ఎంచుకోండి / Sélectionnez la langue / Seleccione el idioma</h2>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी</option>
+      <option value="ta">தமிழ்</option>
+      <option value="te">తెలుగు</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+    <button id="languageOkBtn">OK</button>
+  </div>
+  
+  <!-- Settings Overlay -->
+  <div id="settingsOverlay">
+    <h2>Settings</h2>
+    <label>Volume:</label>
+    <input id="volumeSlider" type="range" min="0" max="1" step="0.1" value="1">
+    <!-- New Avatar Selection Section in Settings -->
+    <div id="avatarSelection">
+      <h3 id="avatarSelectionHeading">Avatar Selection (49¢)</h3>
+      <img id="avatarPreview" src="https://via.placeholder.com/100.png?text=Default+Avatar" alt="Avatar Preview">
+      <div>
+        <button id="buyAvatarBtn">Buy New Avatar</button>
+        <button id="applyAvatarBtn">Apply New Avatar</button>
+        <span id="status-avatar"></span>
+      </div>
+    </div>
+    <button id="closeSettingsBtn">Close</button>
+  </div>
+  
+  <button id="settingsBtn">Settings</button>
+  
+  <script>
+    "use strict";
+    
+    // -----------------------------
+    // Translation Data
+    // -----------------------------
+    const translations = {
+      "en": {
+        "title": "Cookie Clicker for Kids – Epic Edition",
+        "instructions": "Tap the cookie to earn points and level up! The game gets more challenging as you progress.",
+        "score": "Score",
+        "level": "Level",
+        "saveScoreBtn": "Save High Score",
+        "highScoresTitle": "High Scores (Max 3 Saves)",
+        "storeTitle": "Store (Cosmetics - 49¢ each)",
+        "buyBorder": "Buy",
+        "applyBorder": "Apply",
+        "buyBackground": "Buy",
+        "applyBackground": "Apply",
+        "adText": "Advertisement",
+        "levelUpMessage": "Hooray! You reached Level {level}!",
+        "promptName": "Enter your name:",
+        "avatarSelection": "Avatar Selection (49¢)",
+        "buyAvatar": "Buy New Avatar",
+        "applyAvatar": "Apply New Avatar"
+      },
+      "hi": {
+        "title": "बच्चों के लिए कूकी क्लिकर – महाकाव्य संस्करण",
+        "instructions": "पॉइंट्स कमाने और स्तर बढ़ाने के लिए कूकी पर टैप करें! जैसे-जैसे आप आगे बढ़ते हैं, खेल और चुनौतीपूर्ण हो जाता है।",
+        "score": "स्कोर",
+        "level": "स्तर",
+        "saveScoreBtn": "उच्च स्कोर सहेजें",
+        "highScoresTitle": "उच्च स्कोर (अधिकतम 3 सहेजे गए)",
+        "storeTitle": "स्टोर (कॉस्मेटिक्स - प्रति 49¢)",
+        "buyBorder": "खरीदें",
+        "applyBorder": "लागू करें",
+        "buyBackground": "खरीदें",
+        "applyBackground": "लागू करें",
+        "adText": "विज्ञापन",
+        "levelUpMessage": "वाह! आपने स्तर {level} प्राप्त किया!",
+        "promptName": "अपना नाम दर्ज करें:",
+        "avatarSelection": "अवतार चयन (49¢)",
+        "buyAvatar": "नया अवतार खरीदें",
+        "applyAvatar": "नया अवतार लगाएँ"
+      },
+      "ta": {
+        "title": "குழந்தைகளுக்கான குக்கீ கிளிக்கர் – எபிக் எடிஷன்",
+        "instructions": "பாயிண்டுகள் பெற குக்கீயை தொட்டுப் பாருங்கள், உங்களது அளவை உயர்த்துங்கள்! நீங்கள் முன்னேறுவதோடு, விளையாட்டு மேலும் சவாலாகிறது.",
+        "score": "மதிப்பு",
+        "level": "நிலை",
+        "saveScoreBtn": "உயர் மதிப்பை சேமிக்கவும்",
+        "highScoresTitle": "உயர் மதிப்புகள் (அதிகபட்சம் 3 சேமிப்புகள்)",
+        "storeTitle": "ஸ்டோர் (காஸ்மெடிக்ஸ் - 49¢ ஒவ்வொன்றுக்கு)",
+        "buyBorder": "வாங்க",
+        "applyBorder": "விண்ணப்பி",
+        "buyBackground": "வாங்க",
+        "applyBackground": "விண்ணப்பி",
+        "adText": "விளம்பரம்",
+        "levelUpMessage": "வாவ்! நீங்கள் நிலை {level} அடைந்தீர்கள்!",
+        "promptName": "உங்கள் பெயரை உள்ளிடவும்:",
+        "avatarSelection": "அवतார் தேர்வு (49¢)",
+        "buyAvatar": "புதிய அவதார் வாங்கவும்",
+        "applyAvatar": "புதிய அவதார் பயன்படுத்தவும்"
+      },
+      "te": {
+        "title": "పిల్లల కోసం కుకీ క్లికర్ – ఎపిక్ ఎడిషన్",
+        "instructions": "పాయింట్లు సంపాదించడానికి, స్థాయిని పెంచడానికి కుకీని తగిలించండి! ఆట సవాళ్లతో మారుతుంది.",
+        "score": "స్కోరు",
+        "level": "స్థాయి",
+        "saveScoreBtn": "హై స్కోరు సేవ్ చేయండి",
+        "highScoresTitle": "హై స్కోర్లు (గరిష్ఠ 3 సేవ్‌లు)",
+        "storeTitle": "స్టోర్ (కాస్మెటిక్‌లు - ఒక్కొక్కటి 49¢)",
+        "buyBorder": "కొనుగోలు చేయండి",
+        "applyBorder": "అన్వయించండి",
+        "buyBackground": "కొనుగోలు చేయండి",
+        "applyBackground": "అన్వయించండి",
+        "adText": "ప్రచారం",
+        "levelUpMessage": "వావ్! మీరు స్థాయి {level} చేరుకున్నారు!",
+        "promptName": "మీ పేరును నమోదు చేయండి:",
+        "avatarSelection": "అవతార్ ఎంపిక (49¢)",
+        "buyAvatar": "కొత్త అవతార్ కొనండి",
+        "applyAvatar": "కొత్త అవతార్ అన్వయించండి"
+      },
+      "fr": {
+        "title": "Cookie Clicker pour Enfants – Édition Épique",
+        "instructions": "Tapez sur le cookie pour gagner des points et monter de niveau! Le jeu devient plus difficile au fur et à mesure.",
+        "score": "Score",
+        "level": "Niveau",
+        "saveScoreBtn": "Enregistrer le Meilleur Score",
+        "highScoresTitle": "Meilleurs Scores (Max 3 enregistrements)",
+        "storeTitle": "Boutique (Cosmétiques - 49¢ chacun)",
+        "buyBorder": "Acheter",
+        "applyBorder": "Appliquer",
+        "buyBackground": "Acheter",
+        "applyBackground": "Appliquer",
+        "adText": "Publicité",
+        "levelUpMessage": "Hourra! Vous avez atteint le niveau {level}!",
+        "promptName": "Entrez votre nom:",
+        "avatarSelection": "Sélection d'Avatar (49¢)",
+        "buyAvatar": "Acheter Nouvel Avatar",
+        "applyAvatar": "Appliquer Nouvel Avatar"
+      },
+      "es": {
+        "title": "Cookie Clicker para Niños – Edición Épica",
+        "instructions": "¡Toca la galleta para ganar puntos y subir de nivel! El juego se vuelve más desafiante a medida que avanzas.",
+        "score": "Puntuación",
+        "level": "Nivel",
+        "saveScoreBtn": "Guardar Puntaje Máximo",
+        "highScoresTitle": "Puntuaciones Altas (Máximo 3 guardados)",
+        "storeTitle": "Tienda (Cosméticos - 49¢ cada uno)",
+        "buyBorder": "Comprar",
+        "applyBorder": "Aplicar",
+        "buyBackground": "Comprar",
+        "applyBackground": "Aplicar",
+        "adText": "Publicidad",
+        "levelUpMessage": "¡Hurra! ¡Has alcanzado el nivel {level}!",
+        "promptName": "Ingresa tu nombre:",
+        "avatarSelection": "Selección de Avatar (49¢)",
+        "buyAvatar": "Comprar Nuevo Avatar",
+        "applyAvatar": "Aplicar Nuevo Avatar"
+      }
+    };
+
+    let currentLanguage = "en";
+
+    // Update all text elements according to the current language.
+    function updateLanguageTexts() {
+      document.title = translations[currentLanguage]["title"];
+      document.querySelector("header h1").textContent = translations[currentLanguage]["title"];
+      document.getElementById("instructions").textContent = translations[currentLanguage]["instructions"];
+      document.querySelectorAll(".info")[0].innerHTML = translations[currentLanguage]["score"] + ": <span id='scoreDisplay'>" + scoreManager.getScore() + "</span>";
+      document.querySelectorAll(".info")[1].innerHTML = translations[currentLanguage]["level"] + ": <span id='levelDisplay'>" + gameManager.levelManager.currentLevel + "</span>";
+      document.getElementById("saveScoreBtn").textContent = translations[currentLanguage]["saveScoreBtn"];
+      document.querySelector("#highScores h2").textContent = translations[currentLanguage]["highScoresTitle"];
+      document.querySelector("#store h2").textContent = translations[currentLanguage]["storeTitle"];
+      document.getElementById("buyBorderBtn").textContent = translations[currentLanguage]["buyBorder"];
+      document.getElementById("applyBorderBtn").textContent = translations[currentLanguage]["applyBorder"];
+      document.getElementById("buyBgBtn").textContent = translations[currentLanguage]["buyBackground"];
+      document.getElementById("applyBgBtn").textContent = translations[currentLanguage]["applyBackground"];
+      document.querySelector("#adContainer p").textContent = translations[currentLanguage]["adText"];
+      document.getElementById("avatarSelectionHeading").textContent = translations[currentLanguage]["avatarSelection"];
+      document.getElementById("buyAvatarBtn").textContent = translations[currentLanguage]["buyAvatar"];
+      document.getElementById("applyAvatarBtn").textContent = translations[currentLanguage]["applyAvatar"];
+    }
+
+    // Set the current language and update texts.
+    function setLanguage(lang) {
+      currentLanguage = lang;
+      updateLanguageTexts();
+      document.getElementById("languageOverlay").style.display = "none";
+    }
+
+    // Initialize language overlay event listener.
+    function createLanguageOverlay() {
+      document.getElementById("languageOkBtn").addEventListener("click", () => {
+        const lang = document.getElementById("languageSelect").value;
+        setLanguage(lang);
+      });
+    }
+
+    // -----------------------------
+    // SettingsManager: Handles settings menu (volume and avatar selection).
+    // -----------------------------
+    class SettingsManager {
+      constructor() {
+        this.volume = 1.0;
+        this.initSettingsUI();
+      }
+      initSettingsUI() {
+        const volumeSlider = document.getElementById("volumeSlider");
+        volumeSlider.addEventListener("input", (e) => {
+          this.volume = parseFloat(e.target.value);
+          document.getElementById("clickSound").volume = this.volume;
+        });
+        document.getElementById("closeSettingsBtn").addEventListener("click", () => {
+          document.getElementById("settingsOverlay").style.display = "none";
+        });
+        document.getElementById("settingsBtn").addEventListener("click", () => {
+          document.getElementById("settingsOverlay").style.display = "flex";
+        });
+      }
+    }
+    const settingsManager = new SettingsManager();
+
+    // -----------------------------
+    // AudioManager: Manages audio playback.
+    // -----------------------------
+    class AudioManager {
+      constructor() {
+        this.clickSound = document.getElementById('clickSound');
+      }
+      playClick() {
+        try {
+          this.clickSound.currentTime = 0;
+          this.clickSound.play();
+        } catch (error) {
+          console.error("Audio playback error:", error);
+        }
+      }
+    }
+
+    // -----------------------------
+    // LevelManager: Determines current level and difficulty.
+    // -----------------------------
+    class LevelManager {
+      constructor(thresholds) {
+        this.thresholds = thresholds;
+        this.currentLevel = 1;
+        this.difficultyMultiplier = 1.0;
+      }
+      updateLevel(score) {
+        let newLevel = 1;
+        for (let i = this.thresholds.length - 1; i >= 0; i--) {
+          if (score >= this.thresholds[i] * this.difficultyMultiplier) {
+            newLevel = i + 1;
+            break;
+          }
+        }
+        if (newLevel > this.currentLevel) {
+          this.currentLevel = newLevel;
+          this.difficultyMultiplier += 0.1;
+        }
+        return this.currentLevel;
+      }
+      getMultiplier() {
+        return this.difficultyMultiplier;
+      }
+    }
+
+    // -----------------------------
+    // ScoreManager: Manages score updates and display.
+    // -----------------------------
+    class ScoreManager {
+      constructor(scoreDisplayElem) {
+        this.score = 0;
+        this.scoreDisplayElem = scoreDisplayElem;
+      }
+      incrementScore(amount) {
+        this.score += amount;
+        this.updateDisplay();
+      }
+      updateDisplay() {
+        this.scoreDisplayElem.textContent = this.score;
+      }
+      getScore() {
+        return this.score;
+      }
+    }
+
+    // -----------------------------
+    // CosmeticManager: Manages cosmetic purchase and application.
+    // -----------------------------
+    class CosmeticManager {
+      constructor() {
+        this.cosmeticPrice = 0.49;
+      }
+      isPurchased(item) {
+        return localStorage.getItem(cosmetic-) === "purchased";
+      }
+      purchase(item) {
+        if (this.isPurchased(item)) {
+          alert("You already own this item!");
+          return false;
+        }
+        if (confirm(Do you want to buy the  for 49¢?)) {
+          localStorage.setItem(cosmetic-, "purchased");
+          return true;
+        }
+        return false;
+      }
+      apply(item) {
+        if (!this.isPurchased(item)) {
+          alert("You haven't purchased this item yet!");
+          return false;
+        }
+        if (item === "border") {
+          document.getElementById("cookie").style.border = "5px dashed #ff66cc";
+        } else if (item === "background") {
+          document.body.style.backgroundColor = "#cceeff";
+        } else if (item === "avatar") {
+          document.getElementById("cookie").src = "https://via.placeholder.com/220.png?text=New+Avatar";
+          document.getElementById("avatarPreview").src = "https://via.placeholder.com/100.png?text=New+Avatar";
+        }
+        alert(${item.charAt(0).toUpperCase() + item.slice(1)} applied!);
+        return true;
+      }
+      loadStatus(item, statusElemId) {
+        if (this.isPurchased(item)) {
+          document.getElementById(statusElemId).textContent = " (Purchased)";
+        } else {
+          document.getElementById(statusElemId).textContent = "";
+        }
+      }
+    }
+
+    // -----------------------------
+    // HighScoreManager: Handles saving and loading high scores.
+    // -----------------------------
+    class HighScoreManager {
+      constructor(listElem) {
+        this.listElem = listElem;
+        this.maxScores = 3;
+      }
+      save(score, level) {
+        let name = prompt(translations[currentLanguage]["promptName"] || "Enter your name:");
+        if (!name) return;
+        const newEntry = { name: name.trim(), score: score, level: level, date: new Date().toLocaleDateString() };
+        try {
+          let scores = JSON.parse(localStorage.getItem("highScores")) || [];
+          if (scores.length >= this.maxScores) {
+            scores.sort((a, b) => a.score - b.score);
+            scores.shift();
+          }
+          scores.push(newEntry);
+          localStorage.setItem("highScores", JSON.stringify(scores));
+        } catch (error) {
+          console.error("High score saving error:", error);
+        }
+        this.load();
+      }
+      load() {
+        this.listElem.innerHTML = "";
+        try {
+          let scores = JSON.parse(localStorage.getItem("highScores")) || [];
+          scores.sort((a, b) => b.score - a.score);
+          scores.forEach(entry => {
+            const li = document.createElement("li");
+            li.textContent = ${entry.name} -  (Level ) on ;
+            this.listElem.appendChild(li);
+          });
+        } catch (error) {
+          console.error("High score loading error:", error);
+        }
+      }
+    }
+
+    // -----------------------------
+    // UIManager: Updates UI elements (e.g., level-up messages).
+    // -----------------------------
+    class UIManager {
+      constructor(levelUpElem, levelDisplayElem) {
+        this.levelUpElem = levelUpElem;
+        this.levelDisplayElem = levelDisplayElem;
+      }
+      showLevelUp(level) {
+        this.levelUpElem.textContent = translations[currentLanguage]["levelUpMessage"].replace("{level}", level);
+        this.levelUpElem.style.opacity = "1";
+        setTimeout(() => {
+          this.levelUpElem.style.opacity = "0";
+        }, 2000);
+      }
+      updateLevelDisplay(level) {
+        this.levelDisplayElem.textContent = level;
+      }
+    }
+
+    // -----------------------------
+    // GameManager: Orchestrates game flow and user interactions.
+    // -----------------------------
+    class GameManager {
+      constructor() {
+        this.audioManager = new AudioManager();
+        this.levelManager = new LevelManager([0, 10, 30, 60, 100, 150, 210, 280, 360, 450]);
+        this.scoreManager = new ScoreManager(document.getElementById("scoreDisplay"));
+        this.highScoreManager = new HighScoreManager(document.getElementById("highScoreList"));
+        this.uiManager = new UIManager(document.getElementById("levelUpMessage"), document.getElementById("levelDisplay"));
+        this.cosmeticManager = new CosmeticManager();
+        this.previousLevel = 1;
+        this.initEventListeners();
+      }
+      initEventListeners() {
+        document.getElementById("cookie").addEventListener("click", () => this.handleCookieClick());
+        document.getElementById("saveScoreBtn").addEventListener("click", () => this.handleSaveScore());
+        document.getElementById("buyBorderBtn").addEventListener("click", () => {
+          if (this.cosmeticManager.purchase("border")) {
+            this.cosmeticManager.loadStatus("border", "status-border");
+          }
+        });
+        document.getElementById("applyBorderBtn").addEventListener("click", () => this.cosmeticManager.apply("border"));
+        document.getElementById("buyBgBtn").addEventListener("click", () => {
+          if (this.cosmeticManager.purchase("background")) {
+            this.cosmeticManager.loadStatus("background", "status-background");
+          }
+        });
+        document.getElementById("applyBgBtn").addEventListener("click", () => this.cosmeticManager.apply("background"));
+        document.getElementById("buyAvatarBtn").addEventListener("click", () => {
+          if (this.cosmeticManager.purchase("avatar")) {
+            this.cosmeticManager.loadStatus("avatar", "status-avatar");
+          }
+        });
+        document.getElementById("applyAvatarBtn").addEventListener("click", () => this.cosmeticManager.apply("avatar"));
+      }
+      handleCookieClick() {
+        const cookieElem = document.getElementById("cookie");
+        cookieElem.classList.add("clicked");
+        setTimeout(() => cookieElem.classList.remove("clicked"), 200);
+        this.audioManager.playClick();
+        let increment = Math.floor(1 * this.levelManager.currentLevel);
+        this.scoreManager.incrementScore(increment);
+        let currentScore = this.scoreManager.getScore();
+        let newLevel = this.levelManager.updateLevel(currentScore);
+        if (newLevel > this.previousLevel) {
+          this.uiManager.showLevelUp(newLevel);
+          this.previousLevel = newLevel;
+        }
+        this.uiManager.updateLevelDisplay(newLevel);
+      }
+      handleSaveScore() {
+        this.highScoreManager.save(this.scoreManager.getScore(), this.levelManager.currentLevel);
+      }
+      start() {
+        this.highScoreManager.load();
+      }
+    }
+
+    const gameManager = new GameManager();
+    const scoreManager = gameManager.scoreManager;
+    gameManager.start();
+
+    // Initialize language overlay on window load.
+    window.addEventListener("load", () => {
+      createLanguageOverlay();
+      updateLanguageTexts();
+    });
+
+    // Global error handler.
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error("Global error:", message, "at", source + ":" + lineno + ":" + colno);
+      return false;
+    };
+  </script>
+</body>
+</html>
